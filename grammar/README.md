@@ -1024,6 +1024,34 @@ scalar-type =  boolean-type / arithmetic-type / address-type / character-type
 Go to: _[address-type](#user-content-address-type), [arithmetic-type](#user-content-arithmetic-type), [boolean-type](#user-content-boolean-type), [character-type](#user-content-character-type)_;
 
 
+Circuit and Alias types are denoted by identifiers and the keyword `Self`.
+The latter is only allowed inside a circuit definition,
+to denote the circuit being defined.
+
+<a name="self-type"></a>
+```abnf
+self-type = %s"Self"
+```
+
+<a name="circuit-or-alias-type"></a>
+```abnf
+circuit-or-alias-type = identifier / self-type
+```
+
+Go to: _[identifier](#user-content-identifier), [self-type](#user-content-self-type)_;
+
+
+A type that represents the combination of scalar types
+and circuit, alias and self types.
+
+<a name="named-type"></a>
+```abnf
+named-type = circuit-or-alias-type / scalar-type
+```
+
+Go to: _[circuit-or-alias-type](#user-content-circuit-or-alias-type), [scalar-type](#user-content-scalar-type)_;
+
+
 A tuple type consists of zero, two, or more component types.
 
 <a name="tuple-type"></a>
@@ -1330,12 +1358,13 @@ postfix-expression = primary-expression
                    / postfix-expression "." identifier
                    / identifier function-arguments
                    / postfix-expression "." identifier function-arguments
-                   / identifier-or-self-type "::" identifier function-arguments
+                   / named-type "::" identifier function-arguments
+                   / named-type "::" identifier
                    / postfix-expression "[" expression "]"
                    / postfix-expression "[" [expression] ".." [expression] "]"
 ```
 
-Go to: _[expression](#user-content-expression), [function-arguments](#user-content-function-arguments), [identifier-or-self-type](#user-content-identifier-or-self-type), [identifier](#user-content-identifier), [natural](#user-content-natural), [postfix-expression](#user-content-postfix-expression), [primary-expression](#user-content-primary-expression)_;
+Go to: _[expression](#user-content-expression), [function-arguments](#user-content-function-arguments), [identifier](#user-content-identifier), [named-type](#user-content-named-type), [natural](#user-content-natural), [postfix-expression](#user-content-postfix-expression), [primary-expression](#user-content-primary-expression)_;
 
 
 Unary operators have the highest operator precedence.
@@ -1352,6 +1381,10 @@ unary-expression = postfix-expression
 Go to: _[postfix-expression](#user-content-postfix-expression), [unary-expression](#user-content-unary-expression)_;
 
 
+Next in expression precedence is casting.
+cast-expression = unary-expression
+                / cast-expression %s"as" integer-type
+                
 Next in the operator precedence is exponentiation,
 following mathematical practice.
 The current rule below makes exponentiation right-associative,
@@ -1359,11 +1392,11 @@ i.e. `a ** b ** c` must be parsed as `a ** (b ** c)`.
 
 <a name="exponential-expression"></a>
 ```abnf
-exponential-expression = unary-expression
-                       / unary-expression "**" exponential-expression
+exponential-expression = cast-expression
+                       / cast-expression "**" exponential-expression
 ```
 
-Go to: _[exponential-expression](#user-content-exponential-expression), [unary-expression](#user-content-unary-expression)_;
+Go to: _[cast-expression](#user-content-cast-expression), [exponential-expression](#user-content-exponential-expression)_;
 
 
 Next in precedence come multiplication and division, both left-associative.

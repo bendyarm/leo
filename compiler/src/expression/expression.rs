@@ -148,7 +148,7 @@ impl<'a> Program<'a> {
             },
 
             // Cast
-            Expression::Cast(_) => unimplemented!("casts not implemented"),
+            Expression::Cast(cast) => self.enforce_cast(cast),
 
             // Variables
             Expression::VariableRef(variable_ref) => self.evaluate_ref(variable_ref),

@@ -112,7 +112,7 @@ pub trait ExpressionNode<'a>: Node {
 
     fn get_type(&'a self) -> Option<Type<'a>>;
     fn is_mut_ref(&self) -> bool;
-    fn const_value(&'a self) -> Option<ConstValue>; // todo: memoize
+    fn const_value(&'a self) -> Result<Option<ConstValue>>; // todo: memoize
     fn is_consty(&self) -> bool;
 }
 
@@ -207,7 +207,7 @@ impl<'a> ExpressionNode<'a> for Expression<'a> {
         }
     }
 
-    fn const_value(&'a self) -> Option<ConstValue<'a>> {
+    fn const_value(&'a self) -> Result<Option<ConstValue<'a>>> {
         use Expression::*;
         match self {
             VariableRef(x) => x.const_value(),
