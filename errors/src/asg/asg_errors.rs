@@ -531,4 +531,28 @@ create_errors!(
         msg: format!("annotation `{}` does not exist", name),
         help: None,
     }
+
+    /// For when a cast is casting to an illegal type.
+    @formatted
+    casting_as_illegal_type {
+        args: (received: impl Display),
+        msg: format!("Can only cast to int type but recieved: '{}'", received),
+        help: None,
+    }
+
+    /// For when the expression being casted is an illegal type.
+    @formatted
+    casting_from_illegal_type {
+        args: (received: impl Display),
+        msg: format!("Can only cast from an int type but recieved: '{}'", received),
+        help: None,
+    }
+
+    /// For when a constant value failed to be casted to the specified type.
+    @formatted
+    casting_const_value_failed {
+        args: (value: impl Display, target_type: impl Display),
+        msg: format!("Failed to cast value `{}` as target type `{}`.", value, target_type),
+        help: None,
+    }
 );
