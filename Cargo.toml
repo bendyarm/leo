@@ -91,6 +91,9 @@ version = "0.7.9"
 
 [dependencies.snarkvm-curves]
 version = "0.7.9"
+# path = "C:\\Users\\jonat\\AppData\\Roaming\\work\\snarkVM\\curves"
+git = "https://github.com/AleoHQ/snarkVM"
+branch = "feature/casting"
 default-features = false
 
 [dependencies.snarkvm-gadgets]
