@@ -64,8 +64,9 @@ impl<'a> ExpressionNode<'a> for CallExpression<'a> {
         true
     }
 
-    fn const_value(&self) -> Option<ConstValue> {
-        None
+    fn const_value(&self) -> Result<Option<ConstValue>> {
+        // static function const evaluation
+        Ok(None)
     }
 
     fn is_consty(&self) -> bool {
