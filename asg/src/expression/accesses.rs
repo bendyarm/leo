@@ -94,7 +94,7 @@ impl<'a> ExpressionNode<'a> for AccessExpression<'a> {
         }
     }
 
-    fn const_value(&'a self) -> Option<ConstValue> {
+    fn const_value(&'a self) -> Result<Option<ConstValue>> {
         use AccessExpression::*;
 
         match self {
