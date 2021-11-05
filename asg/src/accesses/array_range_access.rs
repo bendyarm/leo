@@ -76,6 +76,7 @@ impl<'a> ExpressionNode<'a> for ArrayRangeAccess<'a> {
             Some(ConstValue::Array(values)) => values,
             _ => return Ok(None),
         };
+
         let left_span = self.left.get().map(|e| e.span()).flatten().cloned().unwrap_or_default();
         let const_left = match self.left.get().map(|x| x.const_value()).transpose()? {
             Some(Some(ConstValue::Int(x))) => x.to_usize(&left_span)?,

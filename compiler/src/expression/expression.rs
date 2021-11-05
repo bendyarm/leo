@@ -130,6 +130,7 @@ impl<'a> Program<'a> {
     pub(crate) fn enforce_expression(&mut self, expression: &'a Expression<'a>) -> Result<Value> {
         let span = &expression.span().cloned().unwrap_or_default();
         match expression {
+
             // Access
             Expression::Access(access) => match access {
                 AccessExpression::Array(ArrayAccess { array, index, .. }) => {

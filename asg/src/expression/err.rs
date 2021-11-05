@@ -51,8 +51,8 @@ impl<'a> ExpressionNode<'a> for ErrExpression<'a> {
         true
     }
 
-    fn const_value(&self) -> Option<ConstValue> {
-        Some(ConstValue::Err)
+    fn const_value(&self) -> Result<Option<ConstValue>> {
+        Ok(Some(ConstValue::Err))
     }
 
     fn is_consty(&self) -> bool {
