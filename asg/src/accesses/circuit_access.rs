@@ -74,13 +74,10 @@ impl<'a> ExpressionNode<'a> for CircuitAccess<'a> {
 
     fn const_value(&self) -> Result<Option<ConstValue<'a>>> {
         if let Some(target) = self.target.get() {
-            match target.const_value()? {
-                Some(ConstValue::Circuit(_, members)) => {
-                    if let Some((_, const_value)) = members.get(&self.member.name.to_string()).map(Clone::clone) {
-                        return Ok(Some(const_value))
-                    }
+            if let Some(ConstValue::Circuit(_, members)) = target.const_value()? {
+                if let Some((_, const_value)) = members.get(&self.member.name.to_string()).map(Clone::clone) {
+                    return Ok(Some(const_value))
                 }
-                _  => ()
             }
         }
         Ok(None)
