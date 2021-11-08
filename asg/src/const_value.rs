@@ -248,16 +248,36 @@ macro_rules! const_int_map {
     ($name: ident, $op: expr, $x: ident, $transform: expr) => {
         pub fn $name(&self, span: &Span) -> Result<Option<ConstInt>> {
             Ok(Some(match self {
-                ConstInt::I8($x) => ConstInt::I8(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::I16($x) => ConstInt::I16(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::I32($x) => ConstInt::I32(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::I64($x) => ConstInt::I64(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::I128($x) => ConstInt::I128(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::U8($x) => ConstInt::U8(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::U16($x) => ConstInt::U16(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::U32($x) => ConstInt::U32(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::U64($x) => ConstInt::U64(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
-                ConstInt::U128($x) => ConstInt::U128(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?),
+                ConstInt::I8($x) => {
+                    ConstInt::I8(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::I16($x) => {
+                    ConstInt::I16(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::I32($x) => {
+                    ConstInt::I32(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::I64($x) => {
+                    ConstInt::I64(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::I128($x) => {
+                    ConstInt::I128(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::U8($x) => {
+                    ConstInt::U8(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::U16($x) => {
+                    ConstInt::U16(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::U32($x) => {
+                    ConstInt::U32(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::U64($x) => {
+                    ConstInt::U64(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
+                ConstInt::U128($x) => {
+                    ConstInt::U128(($transform).ok_or(AsgError::unary_operation_overflows($op, $x, span))?)
+                }
             }))
         }
     };
@@ -267,16 +287,36 @@ macro_rules! const_int_bimap {
     ($name: ident, $op: expr, $x: ident, $y: ident, $transform: expr) => {
         pub fn $name(&self, other: &ConstInt, span: &Span) -> Result<Option<ConstInt>> {
             Ok(Some(match (self, other) {
-                (ConstInt::I8($x), ConstInt::I8($y)) => ConstInt::I8(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::I16($x), ConstInt::I16($y)) => ConstInt::I16(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::I32($x), ConstInt::I32($y)) => ConstInt::I32(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::I64($x), ConstInt::I64($y)) => ConstInt::I64(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::I128($x), ConstInt::I128($y)) => ConstInt::I128(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::U8($x), ConstInt::U8($y)) => ConstInt::U8(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::U16($x), ConstInt::U16($y)) => ConstInt::U16(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::U32($x), ConstInt::U32($y)) => ConstInt::U32(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::U64($x), ConstInt::U64($y)) => ConstInt::U64(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
-                (ConstInt::U128($x), ConstInt::U128($y)) => ConstInt::U128(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?),
+                (ConstInt::I8($x), ConstInt::I8($y)) => {
+                    ConstInt::I8(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::I16($x), ConstInt::I16($y)) => {
+                    ConstInt::I16(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::I32($x), ConstInt::I32($y)) => {
+                    ConstInt::I32(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::I64($x), ConstInt::I64($y)) => {
+                    ConstInt::I64(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::I128($x), ConstInt::I128($y)) => {
+                    ConstInt::I128(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::U8($x), ConstInt::U8($y)) => {
+                    ConstInt::U8(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::U16($x), ConstInt::U16($y)) => {
+                    ConstInt::U16(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::U32($x), ConstInt::U32($y)) => {
+                    ConstInt::U32(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::U64($x), ConstInt::U64($y)) => {
+                    ConstInt::U64(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
+                (ConstInt::U128($x), ConstInt::U128($y)) => {
+                    ConstInt::U128(($transform).ok_or(AsgError::binary_operation_overflows($x, $op, $y, span))?)
+                }
                 _ => return Ok(None),
             }))
         }
@@ -284,13 +324,15 @@ macro_rules! const_int_bimap {
 }
 
 macro_rules! power_constructor {
-    ($constructor: expr, $x: ident, $y: ident, $span: expr) => {
-        {
-            let pow = (*$y).try_into().map_err(|_| AsgError::binary_operation_overflows($x, "**", $y, $span))?;
-            let res = $x.checked_pow(pow).ok_or(AsgError::binary_operation_overflows($x, "**", $y, $span))?;
-            $constructor(res)
-        }
-    }
+    ($constructor: expr, $x: ident, $y: ident, $span: expr) => {{
+        let pow = (*$y)
+            .try_into()
+            .map_err(|_| AsgError::binary_operation_overflows($x, "**", $y, $span))?;
+        let res = $x
+            .checked_pow(pow)
+            .ok_or(AsgError::binary_operation_overflows($x, "**", $y, $span))?;
+        $constructor(res)
+    }};
 }
 
 #[allow(clippy::useless_conversion)]

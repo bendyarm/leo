@@ -76,7 +76,7 @@ impl<'a> ExpressionNode<'a> for CircuitAccess<'a> {
         if let Some(target) = self.target.get() {
             if let Some(ConstValue::Circuit(_, members)) = target.const_value()? {
                 if let Some((_, const_value)) = members.get(&self.member.name.to_string()).map(Clone::clone) {
-                    return Ok(Some(const_value))
+                    return Ok(Some(const_value));
                 }
             }
         }

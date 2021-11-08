@@ -112,7 +112,8 @@ impl<'a> FromAst<'a, leo_ast::accesses::ArrayAccess> for ArrayAccess<'a> {
         if let Some(index) = index
             .const_value()?
             .map(|x| x.int().map(|x| x.to_usize(&value.span)).transpose())
-            .transpose()?.flatten()
+            .transpose()?
+            .flatten()
         {
             // Only check index if array size is known.
             // Array out of bounds will be caught later if it really happens.

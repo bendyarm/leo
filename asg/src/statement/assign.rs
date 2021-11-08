@@ -101,15 +101,13 @@ impl<'a> FromAst<'a, leo_ast::AssignStatement> for &'a Statement<'a> {
                                     .and_then(|x| x.const_value().ok())
                                     .flatten()
                                     .or(Some(ConstValue::Int(ConstInt::U32(0)))),
-                                right
-                                    .as_ref()
-                                    .and_then(|x| {
-                                        if let Some(c) = x.const_value().ok().flatten() {
-                                            Some(c)
-                                        } else {
-                                            len.map(|x| x as u32).map(ConstInt::U32).map(ConstValue::Int)
-                                        }
-                                    })
+                                right.as_ref().and_then(|x| {
+                                    if let Some(c) = x.const_value().ok().flatten() {
+                                        Some(c)
+                                    } else {
+                                        len.map(|x| x as u32).map(ConstInt::U32).map(ConstValue::Int)
+                                    }
+                                }),
                             ) {
                                 let left = match left {
                                     ConstValue::Int(x) => x.to_usize(&statement.span).map_err(|_| {

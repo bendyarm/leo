@@ -17,7 +17,7 @@
 use std::cell::Cell;
 
 use leo_asg::*;
-use leo_errors::{Result, emitter::Handler};
+use leo_errors::{emitter::Handler, Result};
 
 pub struct DeadCodeElimination<'b> {
     handler: &'b Handler,
@@ -53,7 +53,7 @@ impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
                         self.handler.emit_err(e)
                     }
                     context.alloc_statement(value)
-                },
+                }
             },
             _ => context.alloc_statement(value),
         }
