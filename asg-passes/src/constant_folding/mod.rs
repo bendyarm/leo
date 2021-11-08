@@ -28,17 +28,22 @@ impl<'a, 'b> ExpressionVisitor<'a> for ConstantFolding<'a, 'b> {
     fn visit_expression(&mut self, input: &Cell<&'a Expression<'a>>) -> VisitResult {
         let expr = input.get();
         // TODO @gluax, @egregius313 Implement results
-        if let Ok(Some(const_value)) = expr.const_value() {
-            let folded_expr = Expression::Constant(Constant {
-                parent: Cell::new(expr.get_parent()),
-                span: expr.span().cloned(),
-                value: const_value,
-            });
-            let folded_expr = self.program.context.alloc_expression(folded_expr);
-            input.set(folded_expr);
-            VisitResult::SkipChildren
-        } else {
-            VisitResult::VisitChildren
+        match expr.const_value() {
+            Ok(Some(const_value)) => {
+                let folded_expr = Expression::Constant(Constant {
+                    parent: Cell::new(expr.get_parent()),
+                    span: expr.span().cloned(),
+                    value: const_value,
+                });
+                let folded_expr = self.program.context.alloc_expression(folded_expr);
+                input.set(folded_expr);
+                VisitResult::SkipChildren
+            },
+            Ok(None) => VisitResult::VisitChildren,
+            Err(e) => {
+                self.handler.emit_err(e);
+                VisitResult::VisitChildren
+            },
         }
     }
 }
