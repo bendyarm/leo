@@ -48,7 +48,12 @@ impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
                         context.alloc_statement(Statement::Empty(conditional.span.clone()))
                     }
                 }
-                _ => context.alloc_statement(value),
+                v => {
+                    if let Err(e) = v {
+                        self.handler.emit_err(e)
+                    }
+                    context.alloc_statement(value)
+                },
             },
             _ => context.alloc_statement(value),
         }
