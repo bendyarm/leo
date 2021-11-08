@@ -249,13 +249,13 @@ impl<'a, 'b> Compiler<'a, 'b> {
         // Do constant folding.
         if self.options.constant_folding_enabled {
             let asg = self.asg.take().unwrap();
-            self.asg = Some(leo_asg_passes::ConstantFolding::do_pass(asg)?);
+            self.asg = Some(leo_asg_passes::ConstantFolding::do_pass(self.handler, asg)?);
         }
 
         // Do dead code elimination.
         if self.options.dead_code_elimination_enabled {
             let asg = self.asg.take().unwrap();
-            self.asg = Some(leo_asg_passes::DeadCodeElimination::do_pass(asg)?);
+            self.asg = Some(leo_asg_passes::DeadCodeElimination::do_pass(self.handler, asg)?);
         }
 
         Ok(())

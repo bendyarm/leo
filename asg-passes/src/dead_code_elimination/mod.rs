@@ -17,15 +17,17 @@
 use std::cell::Cell;
 
 use leo_asg::*;
-use leo_errors::Result;
+use leo_errors::{Result, emitter::Handler};
 
-pub struct DeadCodeElimination {}
+pub struct DeadCodeElimination<'b> {
+    handler: &'b Handler,
+}
 
-impl<'a> ReconstructingReducerExpression<'a> for DeadCodeElimination {}
+impl<'a, 'b> ReconstructingReducerExpression<'a> for DeadCodeElimination<'b> {}
 
-impl<'a> ReconstructingReducerProgram<'a> for DeadCodeElimination {}
+impl<'a, 'b> ReconstructingReducerProgram<'a> for DeadCodeElimination<'b> {}
 
-impl<'a> ReconstructingReducerStatement<'a> for DeadCodeElimination {
+impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
     ///
     /// Removes dead code inside a false conditional statement block.
     ///
@@ -66,9 +68,9 @@ impl<'a> ReconstructingReducerStatement<'a> for DeadCodeElimination {
     }
 }
 
-impl<'a> AsgPass<'a> for DeadCodeElimination {
-    fn do_pass(asg: Program<'a>) -> Result<Program<'a>> {
-        let pass = DeadCodeElimination {};
+impl<'a, 'b> AsgPass<'a, 'b> for DeadCodeElimination<'b> {
+    fn do_pass(handler: &'b Handler, asg: Program<'a>) -> Result<Program<'a>> {
+        let pass = DeadCodeElimination { handler };
         let mut director = ReconstructingDirector::new(asg.context, pass);
         Ok(director.reduce_program(asg))
     }

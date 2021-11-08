@@ -17,10 +17,11 @@
 use std::cell::Cell;
 
 use leo_asg::*;
-use leo_errors::Result;
+use leo_errors::{Result, emitter::Handler};
 
 pub struct ConstantFolding<'a, 'b> {
     program: &'b Program<'a>,
+    handler: &'b Handler,
 }
 
 impl<'a, 'b> ExpressionVisitor<'a> for ConstantFolding<'a, 'b> {
@@ -46,9 +47,9 @@ impl<'a, 'b> StatementVisitor<'a> for ConstantFolding<'a, 'b> {}
 
 impl<'a, 'b> ProgramVisitor<'a> for ConstantFolding<'a, 'b> {}
 
-impl<'a, 'b> AsgPass<'a> for ConstantFolding<'a, 'b> {
-    fn do_pass(asg: Program<'a>) -> Result<Program<'a>> {
-        let pass = ConstantFolding { program: &asg };
+impl<'a, 'b> AsgPass<'a, 'b> for ConstantFolding<'a, 'b> {
+    fn do_pass(handler: &'b Handler, asg: Program<'a>) -> Result<Program<'a>> {
+        let pass = ConstantFolding { program: &asg, handler };
         let mut director = VisitorDirector::new(pass);
         director.visit_program(&asg).ok();
         Ok(asg)
