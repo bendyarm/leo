@@ -106,22 +106,20 @@ impl<'a> FromAst<'a, leo_ast::AssignStatement> for &'a Statement<'a> {
                                     .and_then(|x| {
                                         if let Some(c) = x.const_value().ok().flatten() {
                                             Some(c)
-                                        } else if let Some(ulen) = len.map(|x| x as u32) {
-                                            Some(ConstValue::Int(ConstInt::U32(ulen)))
                                         } else {
-                                            None
+                                            len.map(|x| x as u32).map(ConstInt::U32).map(ConstValue::Int)
                                         }
                                     })
                             ) {
                                 let left = match left {
-                                    ConstValue::Int(x) => x.to_usize(&statement.span).or_else(|_| {
-                                        Err(AsgError::invalid_assign_index(name, x.to_string(), &statement.span))
+                                    ConstValue::Int(x) => x.to_usize(&statement.span).map_err(|_| {
+                                        AsgError::invalid_assign_index(name, x.to_string(), &statement.span)
                                     })?,
                                     _ => unimplemented!(),
                                 };
                                 let right = match right {
-                                    ConstValue::Int(x) => x.to_usize(&statement.span).or_else(|_| {
-                                        Err(AsgError::invalid_assign_index(name, x.to_string(), &statement.span))
+                                    ConstValue::Int(x) => x.to_usize(&statement.span).map_err(|_| {
+                                        AsgError::invalid_assign_index(name, x.to_string(), &statement.span)
                                     })?,
                                     _ => unimplemented!(),
                                 };
