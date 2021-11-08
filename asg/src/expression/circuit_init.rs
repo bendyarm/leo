@@ -65,12 +65,9 @@ impl<'a> ExpressionNode<'a> for CircuitInitExpression<'a> {
         for (identifier, member) in self.values.iter() {
             // insert by name because accessmembers identifiers are different.
             if let Some(value) = member.get().const_value()? {
-                members.insert(
-                    identifier.name.to_string(),
-                    (identifier.clone(), value),
-                );
+                members.insert(identifier.name.to_string(), (identifier.clone(), value));
             } else {
-                return Ok(None)
+                return Ok(None);
             }
         }
         // Store circuit as well for get_type.

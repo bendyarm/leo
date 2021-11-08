@@ -17,7 +17,7 @@
 use std::cell::Cell;
 
 use leo_asg::*;
-use leo_errors::{Result, emitter::Handler};
+use leo_errors::{emitter::Handler, Result};
 
 pub struct ConstantFolding<'a, 'b> {
     program: &'b Program<'a>,
@@ -38,12 +38,12 @@ impl<'a, 'b> ExpressionVisitor<'a> for ConstantFolding<'a, 'b> {
                 let folded_expr = self.program.context.alloc_expression(folded_expr);
                 input.set(folded_expr);
                 VisitResult::SkipChildren
-            },
+            }
             Ok(None) => VisitResult::VisitChildren,
             Err(e) => {
                 self.handler.emit_err(e);
                 VisitResult::VisitChildren
-            },
+            }
         }
     }
 }
