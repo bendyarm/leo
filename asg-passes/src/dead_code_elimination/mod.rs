@@ -49,9 +49,7 @@ impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
                     }
                 }
                 v => {
-                    if let Err(e) = v {
-                        self.handler.emit_err(e)
-                    }
+                    let _ = self.handler.extend_if_error(v);
                     context.alloc_statement(value)
                 }
             },
