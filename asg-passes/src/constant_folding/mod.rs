@@ -39,9 +39,8 @@ impl<'a, 'b> ExpressionVisitor<'a> for ConstantFolding<'a, 'b> {
                 input.set(folded_expr);
                 VisitResult::SkipChildren
             }
-            Ok(None) => VisitResult::VisitChildren,
-            Err(e) => {
-                self.handler.emit_err(e);
+            r => {
+                let _ = self.handler.extend_if_error(r);
                 VisitResult::VisitChildren
             }
         }
