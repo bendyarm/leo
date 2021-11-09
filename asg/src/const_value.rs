@@ -336,7 +336,6 @@ macro_rules! power_constructor {
 }
 
 #[allow(clippy::useless_conversion)]
-// TODO @gluax, @egregius313 value preserving cast
 impl ConstInt {
     const_int_op!(raw_value, String, x, format!("{}", x));
 
