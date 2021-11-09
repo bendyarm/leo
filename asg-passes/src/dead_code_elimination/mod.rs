@@ -38,7 +38,6 @@ impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
         value: Statement<'a>,
     ) -> &'a Statement<'a> {
         match &value {
-            // TODO @gluax, @egregius313: Implement result catching
             Statement::Conditional(conditional) => match conditional.condition.get().const_value() {
                 Ok(Some(ConstValue::Boolean(true))) => conditional.result.get(),
                 Ok(Some(ConstValue::Boolean(false))) => {
