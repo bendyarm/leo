@@ -188,36 +188,37 @@ macro_rules! const_int_op {
 macro_rules! const_int_cast_op {
     ($name: ident, $retType: ty) => {
         pub fn $name(&self, span: &Span) -> Result<$retType> {
+            let as_type = stringify!($retType);
             match self {
                 ConstInt::I8(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "I8", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::I16(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "I16", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::I32(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "I32", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::I64(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "I64", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::I128(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "I128", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::U8(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "U8", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::U16(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "U16", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::U32(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "U32", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::U64(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "U64", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
                 ConstInt::U128(x) => {
-                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, "U128", span).into())
+                    <$retType>::try_from(*x).map_err(|_| AsgError::casting_const_value_failed(x, as_type, span).into())
                 }
             }
         }
