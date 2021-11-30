@@ -24,7 +24,7 @@ static SOURCE_FILE_EXTENSION: &str = ".leo";
 static SOURCE_DIRECTORY_NAME: &str = "src/";
 static IMPORTS_DIRECTORY_NAME: &str = "imports/";
 
-impl ImportParser {
+impl ImportParser<'_> {
     fn parse_package_access(
         &mut self,
         package: &DirEntry,
@@ -35,8 +35,9 @@ impl ImportParser {
             return self.parse_package(package.path(), remaining_segments, span);
         }
 
-        let program = Self::parse_import_file(package, span)?;
-        let ast = leo_ast_passes::Importer::do_pass(leo_ast_passes::Importer::new(self, ""), program)?.into_repr();
+        let program = Self::parse_import_file(self.handler, package, span)?;
+        let ast = leo_ast_passes::Importer::do_pass(leo_ast_passes::Importer::new(self, "", self.handler), program)?
+            .into_repr();
 
         Ok(ast)
     }
@@ -82,7 +83,8 @@ impl ImportParser {
             .map_err(|error| ImportError::directory_error(error, &error_path, span))?;
 
         // Check if the imported package name is in the source directory.
-        let matched_source_entry = entries.into_iter().find(|entry| {
+        // let source_entries: Vec<DirEntry> = entries
+        let mut source_entries = entries.into_iter().filter(|entry| {
             entry
                 .file_name()
                 .into_string()
@@ -90,6 +92,18 @@ impl ImportParser {
                 .trim_end_matches(SOURCE_FILE_EXTENSION)
                 .eq(package_name)
         });
+
+        let matched_source_entry = source_entries.next();
+        if let Some(conflicting_path) = source_entries.next() {
+            return Err(ImportError::conflicting_local_imports(
+                [
+                    matched_source_entry.map_or("".into(), |e| e.path()),
+                    conflicting_path.path(),
+                ],
+                span,
+            )
+            .into());
+        }
 
         if imports_directory.exists() {
             // Get a vector of all packages in the imports directory.

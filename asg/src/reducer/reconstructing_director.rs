@@ -38,6 +38,7 @@ impl<'a, R: ReconstructingReducerExpression<'a>> ReconstructingDirector<'a, R> {
 
     pub fn reduce_expression(&mut self, input: &'a Expression<'a>) -> &'a Expression<'a> {
         let value = match input.clone() {
+            Expression::Err(e) => self.reduce_err(e),
             Expression::ArrayInit(e) => self.reduce_array_init(e),
             Expression::ArrayInline(e) => self.reduce_array_inline(e),
             Expression::Binary(e) => self.reduce_binary(e),
@@ -69,6 +70,10 @@ impl<'a, R: ReconstructingReducerExpression<'a>> ReconstructingDirector<'a, R> {
             variable.references.push(allocated);
         }
         allocated
+    }
+
+    pub fn reduce_err(&mut self, input: ErrExpression<'a>) -> Expression<'a> {
+        self.reducer.reduce_err(input)
     }
 
     pub fn reduce_array_init(&mut self, input: ArrayInitExpression<'a>) -> Expression<'a> {
@@ -313,6 +318,7 @@ impl<'a, R: ReconstructingReducerProgram<'a>> ReconstructingDirector<'a, R> {
 
     pub fn reduce_circuit_member(&mut self, input: CircuitMember<'a>) -> CircuitMember<'a> {
         match input {
+            CircuitMember::Const(_) => self.reducer.reduce_circuit_member_const(input),
             CircuitMember::Function(function) => {
                 let function = self.reduce_function(function);
                 self.reducer.reduce_circuit_member_function(input, function)

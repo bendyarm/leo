@@ -26,6 +26,13 @@ pub trait ReconstructingReducerExpression<'a> {
         value
     }
 
+    fn reduce_err(&mut self, input: ErrExpression<'a>) -> Expression<'a> {
+        Expression::Err(ErrExpression {
+            parent: input.parent,
+            span: input.span,
+        })
+    }
+
     fn reduce_array_init(&mut self, input: ArrayInitExpression<'a>, element: &'a Expression<'a>) -> Expression<'a> {
         Expression::ArrayInit(ArrayInitExpression {
             parent: input.parent,
@@ -359,6 +366,10 @@ pub trait ReconstructingReducerProgram<'a>: ReconstructingReducerStatement<'a> {
     // todo @protryon: this is kind of hacky
     fn reduce_function(&mut self, input: &'a Function<'a>, body: Option<&'a Statement<'a>>) -> &'a Function<'a> {
         input.body.set(body);
+        input
+    }
+
+    fn reduce_circuit_member_const(&mut self, input: CircuitMember<'a>) -> CircuitMember<'a> {
         input
     }
 

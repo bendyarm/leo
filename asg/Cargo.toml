@@ -15,7 +15,8 @@ keywords = [
 categories = [ "cryptography::cryptocurrencies", "web-programming" ]
 include = [ "Cargo.toml", "src", "README.md", "LICENSE.md" ]
 license = "GPL-3.0"
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 
 [dependencies.serde]
 version = "1.0"
@@ -29,6 +30,10 @@ version = "1.7"
 [dependencies.leo-ast]
 version = "1.5.3"
 path = "../ast"
+
+[dependencies.leo-ast-passes]
+version = "1.5.3"
+path = "../ast-passes"
 
 [dependencies.leo-errors]
 path = "../errors"
