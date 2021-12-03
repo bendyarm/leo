@@ -119,6 +119,11 @@ pub fn static_include_stdlib() {
     );
 
     stdlib.insert(
+        "transaction_model/record.leo".to_string(),
+        include_str!("./../transaction_model/record.leo").to_string(),
+    );
+
+    stdlib.insert(
         "unstable/blake2s.leo".to_string(),
         include_str!("./../unstable/blake2s.leo").to_string(),
     );
