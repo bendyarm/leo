@@ -29,7 +29,7 @@ pub struct Annotation {
     pub arguments: Vec<StrTendril>,
 }
 
-const ALLOWED_ANNOTATIONS: &[&str] = &["test"];
+const ALLOWED_ANNOTATIONS: &[&str] = &["test", "transition", "transaction"];
 
 impl Annotation {
     pub fn is_valid_annotation(&self) -> bool {
