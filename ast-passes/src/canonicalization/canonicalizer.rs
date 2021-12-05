@@ -32,8 +32,11 @@ pub struct Canonicalizer {
 }
 
 impl AstPass for Canonicalizer {
-    fn do_pass(self, ast: Program) -> Result<Ast> {
-        Ok(Ast::new(ReconstructingDirector::new(self).reduce_program(&ast)?))
+    type Input = (Self, Program);
+    type Output = Result<Ast>;
+
+    fn do_pass((reducer, ast): Self::Input) -> Result<Ast> {
+        Ok(Ast::new(ReconstructingDirector::new(reducer).reduce_program(&ast)?))
     }
 }
 

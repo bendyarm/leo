@@ -45,9 +45,13 @@ impl<'a, T> AstPass for Importer<'a, T>
 where
     T: ImportResolver,
 {
-    fn do_pass(self, ast: Program) -> Result<Ast> {
+    type Input = (Self, Program);
+    type Output = Result<Ast>;
+
+    fn do_pass((importer, ast): Self::Input) -> Self::Output {
         let mut ast = ast;
-        ast.imports.extend(leo_stdlib::resolve_prelude_modules(self.handler)?);
+        ast.imports
+            .extend(leo_stdlib::resolve_prelude_modules(importer.handler)?);
 
         let mut imported_symbols: Vec<(Vec<String>, ImportSymbol, Span)> = vec![];
         for import_statement in ast.import_statements.iter() {
@@ -59,7 +63,7 @@ where
             deduplicated_imports.insert(package.clone(), span.clone());
         }
 
-        let mut wrapped_resolver = CoreImportResolver::new(self.resolver, self.curve);
+        let mut wrapped_resolver = CoreImportResolver::new(importer.resolver, importer.curve);
 
         let mut resolved_packages: IndexMap<Vec<String>, Program> = IndexMap::new();
         for (package, span) in deduplicated_imports {

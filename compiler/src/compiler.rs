@@ -179,14 +179,14 @@ impl<'a, 'b> Compiler<'a, 'b> {
         }
 
         // Preform import resolution.
-        ast = leo_ast_passes::Importer::do_pass(
+        ast = leo_ast_passes::Importer::do_pass((
             leo_ast_passes::Importer::new(
                 &mut ImportParser::new(self.handler, self.main_file_path.clone(), self.imports_map.clone()),
                 "bls12_377",
                 self.handler,
             ),
             ast.into_repr(),
-        )?;
+        ))?;
 
         if self.output_options.ast_imports_resolved {
             if self.output_options.spans_enabled {
@@ -197,7 +197,7 @@ impl<'a, 'b> Compiler<'a, 'b> {
         }
 
         // Preform canonicalization of AST always.
-        ast = leo_ast_passes::Canonicalizer::do_pass(Default::default(), ast.into_repr())?;
+        ast = leo_ast_passes::Canonicalizer::do_pass((Default::default(), ast.into_repr()))?;
 
         if self.output_options.ast_canonicalized {
             if self.output_options.spans_enabled {

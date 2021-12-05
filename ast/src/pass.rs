@@ -18,5 +18,8 @@ use crate::{Ast, Program};
 use leo_errors::Result;
 
 pub trait AstPass {
-    fn do_pass(self, ast: Program) -> Result<Ast>;
+    type Input;
+    type Output;
+
+    fn do_pass(input: Self::Input) -> Self::Output;
 }
