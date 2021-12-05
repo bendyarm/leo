@@ -320,4 +320,29 @@ create_errors!(
         msg: "arrays in main function input must have known size",
         help: None,
     }
+
+    /// For when a program has more than the maximum number of transitions.
+    @formatted
+    exceeded_maximum_number_of_transitions {
+        args: (max: u8),
+        msg: format!("cannot have more than {} transitions in a given program.", max),
+        help: None,
+    }
+
+    /// For when a transition function does not have at most two inputs of type `Record`.
+    @formatted
+    input_is_at_most_n_records {
+        args: (n: usize),
+        msg: format!("functions annotated with @transition must take at most {} `Record`s (from stdlib) as input.", n),
+        help: None,
+    }
+
+    /// For when a transition function does not have at most two outputs of tupe `Record`.
+    @formatted
+    output_is_at_most_n_records {
+        args: (n: usize),
+        msg: format!("functions annotated with @transition must produce at most {} `Record`s (from stdlib) as output.", n),
+        help: None,
+    }
+
 );
