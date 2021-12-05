@@ -22,5 +22,7 @@ pub mod constant_folding;
 pub use constant_folding::*;
 
 pub mod dead_code_elimination;
-
 pub use dead_code_elimination::*;
+
+pub mod transaction_checker;
+pub use transaction_checker::*;

@@ -1290,6 +1290,7 @@ dependencies = [
  "leo-asg",
  "leo-errors",
  "petgraph 0.6.0",
+ "snarkvm-dpc",
 ]
 
 [[package]]

@@ -29,6 +29,9 @@ version = "1.5.3"
 path = "../errors"
 version = "1.5.3"
 
+[dependencies.snarkvm-dpc]
+version = "0.7.9"
+
 [dependencies.dot]
 version = "0.1.4"
 
