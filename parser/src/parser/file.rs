@@ -32,6 +32,7 @@ impl ParserContext<'_> {
         let mut functions = IndexMap::new();
         let mut global_consts = IndexMap::new();
         // let mut tests = IndexMap::new();
+        let mut annotations = IndexMap::new();
 
         while self.has_next() {
             let token = self.peek()?;
@@ -39,33 +40,59 @@ impl ParserContext<'_> {
                 Token::Import => {
                     import_statements.push(self.parse_import_statement()?);
                 }
+                Token::At => {
+                    // Parse any annotations.
+                    while self.peek_token().as_ref() == &Token::At {
+                        let annotation = self.parse_annotation()?;
+                        annotations.insert(annotation.name.name.to_string(), annotation);
+                    }
+                    // Next tokens should be `const`, `function`, or `circuit`
+                    let token = self.peek()?;
+                    match &token.token {
+                        Token::Const | Token::Function | Token::Circuit | Token::Ident(_) => (),
+                        _ => self.emit_err(ParserError::unexpected(token, "const or function or circuit", &token.span))
+                    }
+
+                }
                 Token::Circuit => {
                     self.expect(Token::Circuit)?;
-                    let (id, circuit) = self.parse_circuit()?;
+                    let (id, circuit) = self.parse_circuit(annotations)?;
                     circuits.insert(id, circuit);
+
+                    // Clear collected annotations
+                    annotations = IndexMap::new();
                 }
                 Token::Ident(ident) => match ident.as_ref() {
                     "test" => return Err(ParserError::test_function(&token.span).into()),
                     kw @ ("struct" | "class") => {
                         self.emit_err(ParserError::unexpected(kw, "circuit", &token.span));
                         self.bump().unwrap();
-                        let (id, circuit) = self.parse_circuit()?;
+                        let (id, circuit) = self.parse_circuit(annotations)?;
                         circuits.insert(id, circuit);
+
+                        // Clear collected annotations.
+                        annotations = IndexMap::new();
                     }
                     _ => return Err(Self::unexpected_item(token).into()),
                 },
                 // Const functions share the first token with the global Const.
                 Token::Const if self.peek_is_function()? => {
-                    let (id, function) = self.parse_function_declaration()?;
+                    let (id, function) = self.parse_function_declaration(annotations)?;
                     functions.insert(id, function);
+
+                    // Clear collected annotations
+                    annotations = IndexMap::new();
                 }
                 Token::Const => {
                     let (name, global_const) = self.parse_global_const_declaration()?;
                     global_consts.insert(name, global_const);
                 }
-                Token::Function | Token::At => {
-                    let (id, function) = self.parse_function_declaration()?;
+                Token::Function => {
+                    let (id, function) = self.parse_function_declaration(annotations)?;
                     functions.insert(id, function);
+
+                    // Clear collected annotations
+                    annotations = IndexMap::new();
                 }
                 Token::Type => {
                     let (name, alias) = self.parse_type_alias()?;
@@ -394,7 +421,13 @@ impl ParserContext<'_> {
     pub fn parse_member_function_declaration(&mut self) -> Result<CircuitMember> {
         let peeked = self.peek()?.clone();
         if self.peek_is_function()? {
-            let function = self.parse_function_declaration()?;
+            // Parse any annotations.
+            let mut annotations = IndexMap::new();
+            while self.peek_token().as_ref() == &Token::At {
+                let annotation = self.parse_annotation()?;
+                annotations.insert(annotation.name.name.to_string(), annotation);
+            }
+            let function = self.parse_function_declaration(annotations)?;
             Ok(CircuitMember::CircuitFunction(Box::new(function.1)))
         } else {
             return Err(ParserError::unexpected(
@@ -414,13 +447,8 @@ impl ParserContext<'_> {
     /// Returns an [`(Identifier, Circuit)`] tuple of AST nodes if the next tokens represent a
     /// circuit name and definition statement.
     ///
-    pub fn parse_circuit(&mut self) -> Result<(Identifier, Circuit)> {
-        // Parse any annotations.
-        let mut annotations = IndexMap::new();
-        while self.peek_token().as_ref() == &Token::At {
-            let annotation = self.parse_annotation()?;
-            annotations.insert(annotation.name.name.to_string(), annotation);
-        }
+    pub fn parse_circuit(&mut self, annotations: IndexMap<String, Annotation>) -> Result<(Identifier, Circuit)> {
+
 
         let name = if let Some(ident) = self.eat_identifier() {
             ident
@@ -503,14 +531,7 @@ impl ParserContext<'_> {
 
     /// Returns an [`(Identifier, Function)`] AST node if the next tokens represent a function name
     /// and function definition.
-    pub fn parse_function_declaration(&mut self) -> Result<(Identifier, Function)> {
-        // Parse any annotations.
-        let mut annotations = IndexMap::new();
-        while self.peek_token().as_ref() == &Token::At {
-            let annotation = self.parse_annotation()?;
-            annotations.insert(annotation.name.name.to_string(), annotation);
-        }
-
+    pub fn parse_function_declaration(&mut self, annotations: IndexMap<String, Annotation>) -> Result<(Identifier, Function)> {
         // Parse optional const modifier.
         let const_ = self.eat(Token::Const).is_some();
 

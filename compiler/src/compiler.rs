@@ -259,6 +259,10 @@ impl<'a, 'b> Compiler<'a, 'b> {
             ))
         };
 
+        // Always process transition/transaction annotations
+        let asg = self.asg.take().unwrap();
+        self.asg = Some(leo_asg_passes::TransactionChecker::do_pass((asg, self.handler))?);
+
         if self.output_options.asg_initial {
             self.asg = Some(run_dotifier(self.asg.take().unwrap(), "initial_asg")?);
         }

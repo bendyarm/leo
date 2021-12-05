@@ -1,3 +1,4 @@
+@CoreCircuit
 circuit Record {
     owner: address;
     value: i64; // Effectively a u62 as two MSBs are required to be zero.
