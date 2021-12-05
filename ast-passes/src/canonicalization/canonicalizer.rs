@@ -727,6 +727,7 @@ impl ReconstructingReducer for Canonicalizer {
         _circuit: &Circuit,
         circuit_name: Identifier,
         members: Vec<CircuitMember>,
+        annotations: IndexMap<String, Annotation>,
     ) -> Result<Circuit> {
         self.circuit_name = Some(circuit_name.clone());
         let circ = Circuit {
@@ -735,6 +736,7 @@ impl ReconstructingReducer for Canonicalizer {
                 .iter()
                 .map(|member| self.canonicalize_circuit_member(member))
                 .collect(),
+            annotations,
         };
         self.circuit_name = None;
         Ok(circ)

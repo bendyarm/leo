@@ -55,6 +55,7 @@ impl<'a> Input<'a> {
             members: RefCell::new(IndexMap::new()),
             scope,
             span: Some(Span::default()),
+            annotations: IndexMap::new(),
         })
     }
 
@@ -83,6 +84,7 @@ impl<'a> Input<'a> {
             members: RefCell::new(container_members),
             scope: input_scope,
             span: Some(Span::default()),
+            annotations: IndexMap::new(),
         });
 
         Input {

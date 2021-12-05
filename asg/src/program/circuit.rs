@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
-use crate::{AsgId, Expression, ExpressionNode, FromAst, Function, Identifier, Node, Scope, Type};
+use crate::{AsgId, Expression, ExpressionNode, FromAst, Function, Identifier, Node, Scope, Type, Annotation};
 use leo_errors::{AsgError, Result, Span};
 
 use indexmap::IndexMap;
@@ -46,6 +46,7 @@ pub struct Circuit<'a> {
     pub scope: &'a Scope<'a>,
     pub span: Option<Span>,
     pub members: RefCell<IndexMap<String, CircuitMember<'a>>>,
+    pub annotations: IndexMap<String, Annotation>
 }
 
 impl<'a> PartialEq for Circuit<'a> {
@@ -79,6 +80,7 @@ impl<'a> Circuit<'a> {
             members: RefCell::new(IndexMap::new()),
             span: Some(value.circuit_name.span.clone()),
             scope: new_scope,
+            annotations: value.annotations.clone(),
         });
 
         Ok(circuit)
@@ -192,6 +194,7 @@ impl<'a> Into<leo_ast::Circuit> for &Circuit<'a> {
         leo_ast::Circuit {
             circuit_name: self.name.borrow().clone(),
             members,
+            annotations: self.annotations.clone(),
         }
     }
 }

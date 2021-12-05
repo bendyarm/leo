@@ -14,15 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
-use crate::{CircuitMember, Identifier};
+use crate::{Annotation, CircuitMember, Identifier};
 
 use serde::{Deserialize, Serialize};
 use std::fmt;
+use indexmap::map::IndexMap;
 
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Circuit {
     pub circuit_name: Identifier,
     pub members: Vec<CircuitMember>,
+    pub annotations: IndexMap<String, Annotation>
 }
 
 impl Circuit {

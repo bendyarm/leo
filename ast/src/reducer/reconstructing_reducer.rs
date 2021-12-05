@@ -450,8 +450,9 @@ pub trait ReconstructingReducer {
         _circuit: &Circuit,
         circuit_name: Identifier,
         members: Vec<CircuitMember>,
+        annotations: IndexMap<String, Annotation>,
     ) -> Result<Circuit> {
-        Ok(Circuit { circuit_name, members })
+        Ok(Circuit { circuit_name, members, annotations })
     }
 
     fn reduce_annotation(&mut self, annotation: &Annotation, name: Identifier) -> Result<Annotation> {

@@ -731,6 +731,6 @@ impl<R: ReconstructingReducer, O: CombinerOptions> CombineAstAsgDirector<R, O> {
             members.push(self.reduce_circuit_member(ast_member, asg_member.1)?);
         }
 
-        self.ast_reducer.reduce_circuit(ast, ast.circuit_name.clone(), members)
+        self.ast_reducer.reduce_circuit(ast, ast.circuit_name.clone(), members, ast.annotations.clone())
     }
 }

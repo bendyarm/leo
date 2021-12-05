@@ -415,6 +415,13 @@ impl ParserContext<'_> {
     /// circuit name and definition statement.
     ///
     pub fn parse_circuit(&mut self) -> Result<(Identifier, Circuit)> {
+        // Parse any annotations.
+        let mut annotations = IndexMap::new();
+        while self.peek_token().as_ref() == &Token::At {
+            let annotation = self.parse_annotation()?;
+            annotations.insert(annotation.name.name.to_string(), annotation);
+        }
+
         let name = if let Some(ident) = self.eat_identifier() {
             ident
         } else if let Some(scalar_type) = self.eat_any(crate::type_::TYPE_TOKENS) {
@@ -435,6 +442,7 @@ impl ParserContext<'_> {
             Circuit {
                 circuit_name: name,
                 members,
+                annotations,
             },
         ))
     }

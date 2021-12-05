@@ -549,7 +549,12 @@ impl<R: ReconstructingReducer> ReconstructingDirector<R> {
             members.push(self.reduce_circuit_member(member)?);
         }
 
-        self.reducer.reduce_circuit(circuit, circuit_name, members)
+        let mut annotations = IndexMap::new();
+        for (name, annotation) in circuit.annotations.iter() {
+            annotations.insert(name.clone(), self.reduce_annotation(annotation)?);
+        }
+
+        self.reducer.reduce_circuit(circuit, circuit_name, members, annotations)
     }
 
     fn reduce_annotation(&mut self, annotation: &Annotation) -> Result<Annotation> {
