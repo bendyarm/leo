@@ -39,7 +39,7 @@ pub fn parse(program: &str) -> Result<String, JsValue> {
 /// snarkvm is solved.
 fn parse_program(handler: &Handler, program: &str) -> leo_errors::Result<String> {
     let ast = leo_parser::parse_ast(handler, "", program)?;
-    let ast = leo_ast_passes::Canonicalizer::do_pass(Default::default(), ast.into_repr())?.to_json_string()?;
+    let ast = leo_ast_passes::Canonicalizer::do_pass((Default::default(), ast.into_repr()))?.to_json_string()?;
 
     Ok(ast)
 }

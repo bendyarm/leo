@@ -132,18 +132,18 @@ fn generate_asts(handler: &Handler, src_path: PathBuf, target_path: PathBuf, tex
 
     ast.to_json_file_without_keys(target_path.clone(), "initial_ast.json", &["span"])?;
 
-    ast = leo_ast_passes::Importer::do_pass(
+    ast = leo_ast_passes::Importer::do_pass((
         leo_ast_passes::Importer::new(
-            &mut ImportParser::new(&handler, src_path, Default::default()),
+            &mut ImportParser::new(handler, src_path, Default::default()),
             "bls12_377",
             handler,
         ),
         ast.into_repr(),
-    )?;
+    ))?;
 
     ast.to_json_file_without_keys(target_path.clone(), "imports_resolved_ast.json", &["span"])?;
 
-    ast = leo_ast_passes::Canonicalizer::do_pass(leo_ast_passes::Canonicalizer::default(), ast.into_repr())?;
+    ast = leo_ast_passes::Canonicalizer::do_pass((leo_ast_passes::Canonicalizer::default(), ast.into_repr()))?;
 
     ast.to_json_file_without_keys(target_path.clone(), "canonicalization_ast.json", &["span"])?;
 
