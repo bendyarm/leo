@@ -44,10 +44,10 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
 
             let handle_non_record_circuit = |cir1: &Circuit, cir2: Option<&Circuit>, err: LeoError| {
                 let mut is_stdlib_record = cir1.name.clone().into_inner().name.to_string().eq("Record")
-                    && cir1.annotations.keys().any(|k| k == &"CoreCircuit");
+                    && cir1.annotations.keys().any(|k| k == "CoreCircuit");
                 if let Some(cir) = cir2 {
                     is_stdlib_record &= cir.name.clone().into_inner().name.to_string().eq("Record")
-                        && cir.annotations.keys().any(|k| k == &"CoreCircuit");
+                        && cir.annotations.keys().any(|k| k == "CoreCircuit");
                 }
                 if !is_stdlib_record {
                     self.handler.emit_err(err)

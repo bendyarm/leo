@@ -7,6 +7,6 @@ circuit Record {
 
     function is_dummy(self) -> bool {
         // TODO: Need some way of natively getting program_id
-        return value == 0 && payload == [0; 128];
+        return self.value == 0 && self.payload == [0; 128];
     }
 }

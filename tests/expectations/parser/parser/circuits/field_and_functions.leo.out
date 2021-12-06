@@ -112,5 +112,6 @@ outputs:
                 col_stop: 6
                 path: ""
                 content: "    function y() {\n         ...\n    }"
+        annotations: {}
     global_consts: {}
     functions: {}

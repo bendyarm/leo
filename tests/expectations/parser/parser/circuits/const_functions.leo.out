@@ -249,5 +249,6 @@ outputs:
                 col_stop: 6
                 path: ""
                 content: "    const function b(const self, const x: u32) {\n         ...\n    }"
+        annotations: {}
     global_consts: {}
     functions: {}

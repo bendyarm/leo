@@ -37,5 +37,6 @@ outputs:
                         col_stop: 28
                         path: ""
                         content: "    static const y: u32 = 5;"
+        annotations: {}
     global_consts: {}
     functions: {}

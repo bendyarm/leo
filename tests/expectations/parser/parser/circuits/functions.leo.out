@@ -134,5 +134,6 @@ outputs:
                 col_stop: 6
                 path: ""
                 content: "    const function z() {\n         ...\n    }"
+        annotations: {}
     global_consts: {}
     functions: {}

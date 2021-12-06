@@ -50,9 +50,12 @@ impl ParserContext<'_> {
                     let token = self.peek()?;
                     match &token.token {
                         Token::Const | Token::Function | Token::Circuit | Token::Ident(_) => (),
-                        _ => self.emit_err(ParserError::unexpected(token, "const or function or circuit", &token.span))
+                        _ => self.emit_err(ParserError::unexpected(
+                            token,
+                            "const or function or circuit",
+                            &token.span,
+                        )),
                     }
-
                 }
                 Token::Circuit => {
                     self.expect(Token::Circuit)?;
@@ -448,8 +451,6 @@ impl ParserContext<'_> {
     /// circuit name and definition statement.
     ///
     pub fn parse_circuit(&mut self, annotations: IndexMap<String, Annotation>) -> Result<(Identifier, Circuit)> {
-
-
         let name = if let Some(ident) = self.eat_identifier() {
             ident
         } else if let Some(scalar_type) = self.eat_any(crate::type_::TYPE_TOKENS) {
@@ -531,7 +532,10 @@ impl ParserContext<'_> {
 
     /// Returns an [`(Identifier, Function)`] AST node if the next tokens represent a function name
     /// and function definition.
-    pub fn parse_function_declaration(&mut self, annotations: IndexMap<String, Annotation>) -> Result<(Identifier, Function)> {
+    pub fn parse_function_declaration(
+        &mut self,
+        annotations: IndexMap<String, Annotation>,
+    ) -> Result<(Identifier, Function)> {
         // Parse optional const modifier.
         let const_ = self.eat(Token::Const).is_some();
 

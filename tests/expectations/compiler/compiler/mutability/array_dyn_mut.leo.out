@@ -24,6 +24,6 @@ outputs:
               value: "[1, 5, 0]"
     initial_ast: eeb86b2c087ca9833623212ccda533a3005df2d731c659f2bb96928c6faef038
     ir: c78220041210ed00b6a9a47ece3388e8c989002dd8f75919ca7410450e37ee7f
-    imports_resolved_ast: 876f92fb5dee0915f3f6cc6bdb4c3f29d1261b9f4ce685ff035fee31039c4420
-    canonicalized_ast: f4d3b1650d4b9917cfaf4e5794e562ddd8435ee786805b7baa6e18d546ab1176
-    type_inferenced_ast: 40c280ddddf7a114f38b983b9d713e2c8f235895ff414611bdc067e97c7c505b
+    imports_resolved_ast: a667ab323294059ae9a1623dc4e1dfe1b79bf7433a82a201734febd071cc2571
+    canonicalized_ast: b828cb1e7a5971627eb4ca52fa41ace9d0b314808d1480a10f6b9a4515d8eff1
+    type_inferenced_ast: 46fbf77734c02dd82ac28560ded33c8d2da8973922dfc73163da157bb0fefb75

@@ -53,5 +53,6 @@ outputs:
                 col_stop: 6
                 path: ""
                 content: "    function x(self) {\n         ...\n    }"
+        annotations: {}
     global_consts: {}
     functions: {}

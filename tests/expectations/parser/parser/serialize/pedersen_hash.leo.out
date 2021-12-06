@@ -111,6 +111,7 @@ outputs:
                   - Return:
                       expression:
                         Identifier: "{\"name\":\"digest\",\"span\":\"{\\\"line_start\\\":18,\\\"line_stop\\\":18,\\\"col_start\\\":16,\\\"col_stop\\\":22,\\\"path\\\":\\\"\\\",\\\"content\\\":\\\"        return digest;\\\"}\"}"
+        annotations: {}
     global_consts: {}
     functions:
       "{\"name\":\"main\",\"span\":\"{\\\"line_start\\\":23,\\\"line_stop\\\":23,\\\"col_start\\\":10,\\\"col_stop\\\":14,\\\"path\\\":\\\"\\\",\\\"content\\\":\\\"function main(hash_input: [bool; 256], const parameters: [group; 256]) -> group {\\\"}\"}":
