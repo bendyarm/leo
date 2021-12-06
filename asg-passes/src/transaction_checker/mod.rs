@@ -25,6 +25,36 @@ pub struct TransactionChecker<'b> {
     count: u8,
 }
 
+impl<'a, 'b> TransactionChecker<'b> {
+    /// Checks that a given type is a `Circuit` and a `Record` from stdlib,
+    /// otherwise emit an error.
+    fn check_type_is_record(&self, typ: &Type<'a>, err: &dyn Fn() -> LeoError) {
+        match typ {
+            Type::Circuit(circ) => {
+                if circ.name.clone().into_inner().to_string() != "Record" || !circ.annotations.keys().any(|k| k == "CoreCircuit") {
+                    self.handler.emit_err(err())
+                }
+            }
+            _ => self.handler.emit_err(err())
+        }
+    }
+
+    /// Checks that argument types are `Record`s and that there are an appropriate nubmer of them.
+    fn check_arg_types(&self, typ: &Type<'a>, max_records: usize, err: &dyn Fn() -> LeoError)
+    {
+        match typ {
+            Type::Circuit(_) => self.check_type_is_record(typ, err),
+            Type::Tuple(sub_typs) => {
+                if sub_typs.len() > max_records {
+                    self.handler.emit_err(err());
+                }
+                sub_typs.iter().for_each(|typ| self.check_type_is_record(typ, err));
+            }
+            _ => self.handler.emit_err(err())
+        }
+    }
+}
+
 impl<'a, 'b> ExpressionVisitor<'a> for TransactionChecker<'b> {}
 
 impl<'a, 'b> StatementVisitor<'a> for TransactionChecker<'b> {}
@@ -42,43 +72,24 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
                 );
             }
 
-            let handle_non_record_circuit = |cir1: &Circuit, cir2: Option<&Circuit>, err: LeoError| {
-                let mut is_stdlib_record = cir1.name.clone().into_inner().name.to_string().eq("Record")
-                    && cir1.annotations.keys().any(|k| k == "CoreCircuit");
-                if let Some(cir) = cir2 {
-                    is_stdlib_record &= cir.name.clone().into_inner().name.to_string().eq("Record")
-                        && cir.annotations.keys().any(|k| k == "CoreCircuit");
-                }
-                if !is_stdlib_record {
-                    self.handler.emit_err(err)
-                }
-            };
 
-            let check_arg_types = |arg_typs: &[Type<'a>], err: LeoError| match arg_typs[..] {
-                [] => (),
-                [Type::Circuit(cir)] => handle_non_record_circuit(cir, None, err),
-                [Type::Circuit(cir1), Type::Circuit(cir2)] => {
-                    handle_non_record_circuit(cir1, Some(cir2), err);
-                }
-                _ => self.handler.emit_err(err),
-            };
 
             // Check that function arguments have the appropriate types.
-            let err: LeoError = CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into();
-            let arg_typs: Vec<Type<'a>> = input
-                .arguments
-                .values()
-                .map(|v| v.get().borrow().type_.clone())
-                .collect();
-            check_arg_types(&arg_typs[..], err);
+            let err= || CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into();
+            let arg_types: Type<'a> = if input.arguments.len() == 1 {
+                let (_, val) = input.arguments.last().unwrap();
+                val.get().borrow().type_.clone()
+            } else {
+                Type::Tuple(input.arguments
+                    .values()
+                    .map(|v| v.get().borrow().type_.clone())
+                    .collect())
+            };
+            self.check_arg_types(&arg_types, Testnet2::NUM_INPUT_RECORDS, &err);
 
             // Check that function outputs have the appropriate types.
-            let err: LeoError = CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into();
-            match &input.output {
-                Type::Tuple(arg_typs) => check_arg_types(&arg_typs[..], err),
-                Type::Circuit(cir) => handle_non_record_circuit(cir, None, err),
-                _ => self.handler.emit_err(err),
-            }
+            let err= || CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into();
+            self.check_arg_types(&input.output, Testnet2::NUM_OUTPUT_RECORDS, &err);
             self.count += 1;
         }
 
