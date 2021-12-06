@@ -31,17 +31,18 @@ impl<'a, 'b> TransactionChecker<'b> {
     fn check_type_is_record(&self, typ: &Type<'a>, err: &dyn Fn() -> LeoError) {
         match typ {
             Type::Circuit(circ) => {
-                if circ.name.clone().into_inner().to_string() != "Record" || !circ.annotations.keys().any(|k| k == "CoreCircuit") {
+                if circ.name.clone().into_inner().to_string() != "Record"
+                    || !circ.annotations.keys().any(|k| k == "CoreCircuit")
+                {
                     self.handler.emit_err(err())
                 }
             }
-            _ => self.handler.emit_err(err())
+            _ => self.handler.emit_err(err()),
         }
     }
 
     /// Checks that argument types are `Record`s and that there are an appropriate nubmer of them.
-    fn check_arg_types(&self, typ: &Type<'a>, max_records: usize, err: &dyn Fn() -> LeoError)
-    {
+    fn check_arg_types(&self, typ: &Type<'a>, max_records: usize, err: &dyn Fn() -> LeoError) {
         match typ {
             Type::Circuit(_) => self.check_type_is_record(typ, err),
             Type::Tuple(sub_typs) => {
@@ -50,7 +51,7 @@ impl<'a, 'b> TransactionChecker<'b> {
                 }
                 sub_typs.iter().for_each(|typ| self.check_type_is_record(typ, err));
             }
-            _ => self.handler.emit_err(err())
+            _ => self.handler.emit_err(err()),
         }
     }
 }
@@ -72,23 +73,24 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
                 );
             }
 
-
-
             // Check that function arguments have the appropriate types.
-            let err= || CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into();
+            let err = || CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into();
             let arg_types: Type<'a> = if input.arguments.len() == 1 {
                 let (_, val) = input.arguments.last().unwrap();
                 val.get().borrow().type_.clone()
             } else {
-                Type::Tuple(input.arguments
-                    .values()
-                    .map(|v| v.get().borrow().type_.clone())
-                    .collect())
+                Type::Tuple(
+                    input
+                        .arguments
+                        .values()
+                        .map(|v| v.get().borrow().type_.clone())
+                        .collect(),
+                )
             };
             self.check_arg_types(&arg_types, Testnet2::NUM_INPUT_RECORDS, &err);
 
             // Check that function outputs have the appropriate types.
-            let err= || CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into();
+            let err = || CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into();
             self.check_arg_types(&input.output, Testnet2::NUM_OUTPUT_RECORDS, &err);
             self.count += 1;
         }

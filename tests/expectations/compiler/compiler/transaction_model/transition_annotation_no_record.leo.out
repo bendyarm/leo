@@ -1,0 +1,5 @@
+---
+namespace: Compile
+expectation: Fail
+outputs:
+  - "Error [ECMP0376035]: functions annotated with @transition must produce at most 2 `Record`s (from stdlib) as output.\n    --> compiler-test:4:1\n     |\n   4 | function one() -> u32 {\n   5 |      ...\n   6 | }\n     | ^"

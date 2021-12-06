@@ -1,12 +1,10 @@
 /*
 namespace: Compile
-expectation: Fail
+expectation: Pass
 input_file: inputs/dummy.in
 */
 
-circuit Record {
-    value: u64;
-}
+import std.transaction_model.record.Record;
 
 @transition
 function one(rec1: Record, rec2: Record) -> (Record, Record) {
