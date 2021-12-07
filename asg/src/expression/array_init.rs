@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
-use crate::{ConstValue, Expression, ExpressionNode, FromAst, Node, PartialType, Scope, Type};
+use crate::{AsgId, ConstValue, Expression, ExpressionNode, FromAst, Node, PartialType, Scope, Type};
 use leo_errors::{AsgError, Result, Span};
 
 use std::cell::Cell;
 
 #[derive(Clone)]
 pub struct ArrayInitExpression<'a> {
+    pub id: AsgId,
     pub parent: Cell<Option<&'a Expression<'a>>>,
     pub span: Option<Span>,
     pub element: Cell<&'a Expression<'a>>,
@@ -30,6 +31,10 @@ pub struct ArrayInitExpression<'a> {
 impl<'a> Node for ArrayInitExpression<'a> {
     fn span(&self) -> Option<&Span> {
         self.span.as_ref()
+    }
+
+    fn asg_id(&self) -> AsgId {
+        self.id
     }
 }
 
@@ -81,10 +86,12 @@ impl<'a> FromAst<'a, leo_ast::ArrayInitExpression> for ArrayInitExpression<'a> {
         };
         let dimensions = value
             .dimensions
-            .0
+            .flatten()
             .iter()
             .map(|x| {
-                Ok(x.value
+                Ok(x.number()
+                    .ok_or_else(|| AsgError::parse_dimension_error(&value.span))?
+                    .value
                     .parse::<u32>()
                     .map_err(|_| AsgError::parse_dimension_error(&value.span))?)
             })
@@ -131,6 +138,7 @@ impl<'a> FromAst<'a, leo_ast::ArrayInitExpression> for ArrayInitExpression<'a> {
 
         for dimension in dimensions.iter().rev().copied() {
             output = Some(ArrayInitExpression {
+                id: scope.context.get_id(),
                 parent: Cell::new(None),
                 span: Some(value.span.clone()),
                 element: Cell::new(
@@ -150,9 +158,11 @@ impl<'a> Into<leo_ast::ArrayInitExpression> for &ArrayInitExpression<'a> {
     fn into(self) -> leo_ast::ArrayInitExpression {
         leo_ast::ArrayInitExpression {
             element: Box::new(self.element.get().into()),
-            dimensions: leo_ast::ArrayDimensions(vec![leo_ast::PositiveNumber {
-                value: self.len.to_string().into(),
-            }]),
+            dimensions: leo_ast::ArrayDimensions::Multi(vec![leo_ast::ArrayDimensions::Number(
+                leo_ast::PositiveNumber {
+                    value: self.len.to_string().into(),
+                },
+            )]),
             span: self.span.clone().unwrap_or_default(),
         }
     }

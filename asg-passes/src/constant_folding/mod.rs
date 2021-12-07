@@ -22,6 +22,7 @@ use leo_errors::{emitter::Handler, Result};
 pub struct ConstantFolding<'a, 'b> {
     program: &'b Program<'a>,
     handler: &'b Handler,
+    context: &'b AsgContext<'a>,
 }
 
 impl<'a, 'b> ExpressionVisitor<'a> for ConstantFolding<'a, 'b> {
@@ -30,6 +31,7 @@ impl<'a, 'b> ExpressionVisitor<'a> for ConstantFolding<'a, 'b> {
         match expr.const_value() {
             Ok(Some(const_value)) => {
                 let folded_expr = Expression::Constant(Constant {
+                    id: self.context.get_id(),
                     parent: Cell::new(expr.get_parent()),
                     span: expr.span().cloned(),
                     value: const_value,
@@ -50,9 +52,16 @@ impl<'a, 'b> StatementVisitor<'a> for ConstantFolding<'a, 'b> {}
 
 impl<'a, 'b> ProgramVisitor<'a> for ConstantFolding<'a, 'b> {}
 
-impl<'a, 'b> AsgPass<'a, 'b> for ConstantFolding<'a, 'b> {
-    fn do_pass(handler: &'b Handler, asg: Program<'a>) -> Result<Program<'a>> {
-        let pass = ConstantFolding { program: &asg, handler };
+impl<'a, 'b> AsgPass<'a> for ConstantFolding<'a, 'b> {
+    type Input = (Program<'a>, &'b Handler, &'b AsgContext<'a>);
+    type Output = Result<Program<'a>>;
+
+    fn do_pass((asg, handler, ctx): Self::Input) -> Self::Output {
+        let pass = ConstantFolding {
+            program: &asg,
+            context: ctx,
+            handler,
+        };
         let mut director = VisitorDirector::new(pass);
         director.visit_program(&asg).ok();
         Ok(asg)

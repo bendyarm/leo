@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
-use crate::{Alias, AsgContext, Circuit, DefinitionStatement, Function, Input, Type, Variable};
+use crate::{Alias, AsgContext, AsgId, Circuit, DefinitionStatement, Function, Input, Type, Variable};
 use leo_errors::{AsgError, Result, Span};
 
 use indexmap::IndexMap;
@@ -26,7 +26,7 @@ pub struct Scope<'a> {
     pub context: AsgContext<'a>,
 
     /// The unique id of the scope.
-    pub id: u32,
+    pub id: AsgId,
 
     /// The parent scope that this scope inherits.
     pub parent_scope: Cell<Option<&'a Scope<'a>>>,
@@ -198,21 +198,19 @@ impl<'a> Scope<'a> {
             leo_ast::Type::Err => Type::Err,
             leo_ast::Type::IntegerType(int_type) => Type::Integer(int_type.clone()),
             leo_ast::Type::Array(sub_type, dimensions) => {
-                let mut item = Box::new(self.resolve_ast_type(&*sub_type, span)?);
+                let item = Box::new(self.resolve_ast_type(&*sub_type, span)?);
 
-                if let Some(dimensions) = dimensions {
-                    for dimension in dimensions.0.iter().rev() {
-                        let dimension = dimension
-                            .value
+                use leo_ast::ArrayDimensions::*;
+                match dimensions {
+                    Unspecified => Type::ArrayWithoutSize(item),
+                    Number(num) => Type::Array(
+                        item,
+                        num.to_string()
                             .parse::<u32>()
-                            .map_err(|_| AsgError::parse_index_error(span))?;
-                        item = Box::new(Type::Array(item, dimension));
-                    }
-                } else {
-                    item = Box::new(Type::ArrayWithoutSize(item));
+                            .map_err(|_| AsgError::parse_index_error(span))?,
+                    ),
+                    Multi(_) => unimplemented!("multi array type should not exist at asg level"),
                 }
-
-                *item
             }
             leo_ast::Type::Tuple(sub_types) => Type::Tuple(
                 sub_types

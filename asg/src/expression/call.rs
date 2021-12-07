@@ -15,8 +15,8 @@
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
 use crate::{
-    CircuitMember, ConstValue, Expression, ExpressionNode, FromAst, Function, FunctionQualifier, Node, PartialType,
-    Scope, Type,
+    AsgId, CircuitMember, ConstValue, Expression, ExpressionNode, FromAst, Function, FunctionQualifier, Node,
+    PartialType, Scope, Type,
 };
 pub use leo_ast::{BinaryOperation, Node as AstNode};
 use leo_errors::{AsgError, Result, Span};
@@ -25,6 +25,7 @@ use std::cell::Cell;
 
 #[derive(Clone)]
 pub struct CallExpression<'a> {
+    pub id: AsgId,
     pub parent: Cell<Option<&'a Expression<'a>>>,
     pub span: Option<Span>,
     pub function: Cell<&'a Function<'a>>,
@@ -35,6 +36,10 @@ pub struct CallExpression<'a> {
 impl<'a> Node for CallExpression<'a> {
     fn span(&self) -> Option<&Span> {
         self.span.as_ref()
+    }
+
+    fn asg_id(&self) -> AsgId {
+        self.id
     }
 }
 
@@ -121,6 +126,9 @@ impl<'a> FromAst<'a, leo_ast::CallExpression> for CallExpression<'a> {
                         .get(name.name.as_ref())
                         .ok_or_else(|| AsgError::unresolved_circuit_member(&circuit_name, &name.name, span))?;
                     match member {
+                        CircuitMember::Const(_) => {
+                            return Err(AsgError::circuit_const_call(circuit_name, &name.name, span).into());
+                        }
                         CircuitMember::Function(body) => {
                             if body.qualifier == FunctionQualifier::Static {
                                 return Err(
@@ -142,6 +150,7 @@ impl<'a> FromAst<'a, leo_ast::CallExpression> for CallExpression<'a> {
                     inner: ast_value,
                     name,
                     span,
+                    ..
                 }) => {
                     let circuit = if let leo_ast::Expression::Identifier(circuit_name) = &**ast_value {
                         scope
@@ -157,6 +166,9 @@ impl<'a> FromAst<'a, leo_ast::CallExpression> for CallExpression<'a> {
                         .get(name.name.as_ref())
                         .ok_or_else(|| AsgError::unresolved_circuit_member(&circuit_name, &name.name, span))?;
                     match member {
+                        CircuitMember::Const(_) => {
+                            return Err(AsgError::circuit_const_call(circuit_name, &name.name, span).into());
+                        }
                         CircuitMember::Function(body) => {
                             if body.qualifier != FunctionQualifier::Static {
                                 return Err(
@@ -223,6 +235,7 @@ impl<'a> FromAst<'a, leo_ast::CallExpression> for CallExpression<'a> {
             return Err(AsgError::call_test_function(&value.span).into());
         }
         Ok(CallExpression {
+            id: scope.context.get_id(),
             parent: Cell::new(None),
             span: Some(value.span.clone()),
             arguments,
@@ -242,6 +255,7 @@ impl<'a> Into<leo_ast::CallExpression> for &CallExpression<'a> {
                 leo_ast::Expression::Access(leo_ast::AccessExpression::Static(leo_ast::accesses::StaticAccess {
                     inner: Box::new(leo_ast::Expression::Identifier(circuit.name.borrow().clone())),
                     name: self.function.get().name.borrow().clone(),
+                    type_: None,
                     span: self.span.clone().unwrap_or_default(),
                 }))
             } else {

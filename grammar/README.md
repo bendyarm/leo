@@ -1087,7 +1087,7 @@ Go to: _[natural](#user-content-natural)_;
 ```abnf
 array-type-dimensions = array-type-dimension
                       / "(" array-type-dimension
-                            *( "," array-type-dimension ) ")"
+                            *( "," array-type-dimension ) [","] ")"
 ```
 
 Go to: _[array-type-dimension](#user-content-array-type-dimension)_;
@@ -1128,6 +1128,17 @@ identifier-or-self-type = identifier / self-type
 ```
 
 Go to: _[identifier](#user-content-identifier), [self-type](#user-content-self-type)_;
+
+
+A named type is an identifier, the `Self` type, or a scalar type.
+These are types that are named by identifiers or keywords.
+
+<a name="named-type"></a>
+```abnf
+named-type = identifier / self-type / scalar-type
+```
+
+Go to: _[identifier](#user-content-identifier), [scalar-type](#user-content-scalar-type), [self-type](#user-content-self-type)_;
 
 
 The lexical grammar given earlier defines product group literals.
@@ -1341,6 +1352,10 @@ top-level function calls,
 instance (i.e. non-static) member function calls, and
 static member function calls.
 What changes is the start, but they all end in an argument list.
+
+Accesses to static constants are also postfix expressions.
+They consist of a named type followed by the constant name,
+as static constants are associated to named types.
 
 <a name="function-arguments"></a>
 ```abnf
@@ -1691,12 +1706,11 @@ Go to: _[print-arguments](#user-content-print-arguments), [print-function](#user
 
 An annotation consists of an annotation name (which starts with `@`)
 with optional annotation arguments, which are identifiers.
-Note that no parentheses are used if there are no arguments.
 
 <a name="annotation"></a>
 ```abnf
 annotation = annotation-name
-             [ "(" identifier *( "," identifier ) ")" ]
+             [ "(" *( identifier "," ) [ identifier ] ")" ]
 ```
 
 Go to: _[annotation-name](#user-content-annotation-name), [identifier](#user-content-identifier)_;
@@ -1750,6 +1764,20 @@ function-input = [ %s"const" ] identifier ":" type
 Go to: _[identifier](#user-content-identifier), [type](#user-content-type)_;
 
 
+A circuit member constant declaration consists of
+the `static` and `const` keywords followed by
+an identifier and a type, then an initializer
+with a literal terminated by semicolon.
+
+<a name="member-constant-declaration"></a>
+```abnf
+member-constant-declaration = %s"static" %s"const" identifier ":" type
+                              "=" literal ";"
+```
+
+Go to: _[identifier](#user-content-identifier), [literal](#user-content-literal), [type](#user-content-type)_;
+
+
 A circuit member variable declaration consists of
 an identifier and a type, terminated by semicolon.
 For backward compatibility,
@@ -1781,7 +1809,9 @@ Go to: _[function-declaration](#user-content-function-declaration)_;
 
 
 A circuit declaration defines a circuit type,
-as consisting of member variables and functions.
+as consisting of member constants, variables and functions.
+A circuit member constant declaration
+as consisting of member constants, member variables, and member functions.
 To more simply accommodate the backward compatibility
 described for the rule `member-variable-declarations`,
 all the member variables must precede all the member functions;
@@ -1791,7 +1821,8 @@ allowing member variables and member functions to be intermixed.
 <a name="circuit-declaration"></a>
 ```abnf
 circuit-declaration = %s"circuit" identifier
-                      "{" [ member-variable-declarations ]
+                      "{" *member-constant-declaration
+                      [ member-variable-declarations ]
                       *member-function-declaration "}"
 ```
 

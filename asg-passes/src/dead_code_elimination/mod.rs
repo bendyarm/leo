@@ -62,6 +62,7 @@ impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
             statements.truncate(first_return + 1);
         }
         Statement::Block(BlockStatement {
+            id: input.id,
             parent: input.parent,
             span: input.span,
             statements: statements.into_iter().map(Cell::new).collect(),
@@ -70,8 +71,11 @@ impl<'a, 'b> ReconstructingReducerStatement<'a> for DeadCodeElimination<'b> {
     }
 }
 
-impl<'a, 'b> AsgPass<'a, 'b> for DeadCodeElimination<'b> {
-    fn do_pass(handler: &'b Handler, asg: Program<'a>) -> Result<Program<'a>> {
+impl<'a, 'b> AsgPass<'a> for DeadCodeElimination<'b> {
+    type Input = (&'b Handler, Program<'a>);
+    type Output = Result<Program<'a>>;
+
+    fn do_pass((handler, asg): Self::Input) -> Self::Output {
         let pass = DeadCodeElimination { handler };
         let mut director = ReconstructingDirector::new(asg.context, pass);
         Ok(director.reduce_program(asg))

@@ -657,19 +657,6 @@ character-type = %s"char"
 
 scalar-type =  boolean-type / arithmetic-type / address-type / character-type
 
-; Circuit and Alias types are denoted by identifiers and the keyword `Self`.
-; The latter is only allowed inside a circuit definition,
-; to denote the circuit being defined.
-
-self-type = %s"Self"
-
-circuit-or-alias-type = identifier / self-type
-
-; A type that represents the combination of scalar types
-; and circuit, alias and self types.
-
-named-type = circuit-or-alias-type / scalar-type
-
 ; A tuple type consists of zero, two, or more component types.
 
 tuple-type = "(" [ type 1*( "," type ) ] ")"
@@ -686,7 +673,7 @@ array-type-dimension = natural / "_"
 
 array-type-dimensions = array-type-dimension
                       / "(" array-type-dimension
-                            *( "," array-type-dimension ) ")"
+                            *( "," array-type-dimension ) [","] ")"
 
 ; The keyword `Self` denotes the enclosing circuit type.
 ; It is only allowed inside a circuit type declaration.
@@ -709,6 +696,11 @@ type = scalar-type / tuple-type / array-type / identifier / self-type
 ; either identifiers or `Self`, as this is used in other rules.
 
 identifier-or-self-type = identifier / self-type
+
+; A named type is an identifier, the `Self` type, or a scalar type.
+; These are types that are named by identifiers or keywords.
+
+named-type = identifier / self-type / scalar-type
 
 ; The lexical grammar given earlier defines product group literals.
 ; The other kind of group literal is a pair of integer coordinates,
@@ -825,6 +817,10 @@ circuit-expression = circuit-construction
 ; instance (i.e. non-static) member function calls, and
 ; static member function calls.
 ; What changes is the start, but they all end in an argument list.
+
+; Accesses to static constants are also postfix expressions.
+; They consist of a named type followed by the constant name,
+; as static constants are associated to named types.
 
 function-arguments = "(" [ expression *( "," expression ) ] ")"
 
@@ -1004,10 +1000,9 @@ print-call = print-function print-arguments
 
 ; An annotation consists of an annotation name (which starts with `@`)
 ; with optional annotation arguments, which are identifiers.
-; Note that no parentheses are used if there are no arguments.
 
 annotation = annotation-name
-             [ "(" identifier *( "," identifier ) ")" ]
+             [ "(" *( identifier "," ) [ identifier ] ")" ]
 
 ; A function declaration defines a function.
 ; The output type is optional, defaulting to the empty tuple type.
@@ -1030,6 +1025,14 @@ function-inputs = function-input *( "," function-input )
 
 function-input = [ %s"const" ] identifier ":" type
 
+; A circuit member constant declaration consists of
+; the `static` and `const` keywords followed by
+; an identifier and a type, then an initializer
+; with a literal terminated by semicolon.
+
+member-constant-declaration = %s"static" %s"const" identifier ":" type
+                              "=" literal ";"
+
 ; A circuit member variable declaration consists of
 ; an identifier and a type, terminated by semicolon.
 ; For backward compatibility,
@@ -1049,7 +1052,9 @@ member-variable-declarations = *( identifier ":" type ( "," / ";" ) )
 member-function-declaration = function-declaration
 
 ; A circuit declaration defines a circuit type,
-; as consisting of member variables and functions.
+; as consisting of member constants, variables and functions.
+; A circuit member constant declaration
+; as consisting of member constants, member variables, and member functions.
 ; To more simply accommodate the backward compatibility
 ; described for the rule `member-variable-declarations`,
 ; all the member variables must precede all the member functions;
@@ -1057,7 +1062,8 @@ member-function-declaration = function-declaration
 ; allowing member variables and member functions to be intermixed.
 
 circuit-declaration = %s"circuit" identifier
-                      "{" [ member-variable-declarations ]
+                      "{" *member-constant-declaration
+                      [ member-variable-declarations ]
                       *member-function-declaration "}"
 
 ; An import declaration consists of the `import` keyword
