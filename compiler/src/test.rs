@@ -26,15 +26,13 @@ use leo_test_framework::{
 };
 use snarkvm_curves::bls12_377::Bls12_377;
 use snarkvm_eval::Evaluator;
-use snarkvm_ir::{InputData, Program as IR_Program};
+use snarkvm_ir::InputData;
 
 use core::fmt;
 use indexmap::IndexMap;
 use serde_yaml::Value;
 use std::cell::RefCell;
-use std::fs::File;
-use std::fs::{self, create_dir_all};
-use std::io::Write;
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
@@ -97,9 +95,9 @@ struct OutputItem {
 #[derive(serde::Deserialize, serde::Serialize, PartialEq)]
 struct CompileOutput {
     pub circuit: SummarizedCircuit,
-    pub ir: Vec<String>,
     pub output: Vec<OutputItem>,
     pub initial_ast: String,
+    pub ir: String,
     pub imports_resolved_ast: String,
     pub canonicalized_ast: String,
     pub type_inferenced_ast: String,
@@ -234,6 +232,11 @@ fn run_test(test: Test, handler: &Handler, err_buf: &BufferEmitter) -> Result<Va
             ast_imports_resolved: true,
             ast_canonicalized: true,
             ast_type_inferenced: true,
+            asg_initial: false,
+            asg_constants_folded: false,
+            asg_dead_code_eliminated: false,
+            asg_exclude_edges: Vec::new(),
+            asg_exclude_labels: Vec::new(),
             emit_ir: true,
         }),
         cwd,
@@ -251,10 +254,6 @@ fn run_test(test: Test, handler: &Handler, err_buf: &BufferEmitter) -> Result<Va
     for input in inputs {
         let parsed = parsed.clone();
         let (compiled, input_data) = handler.extend_if_error(compile_and_process(parsed, &input, &state))?;
-
-        if std::env::var("EMIT_IR").unwrap_or_default().trim() == "1" {
-            emit_ir(&test, &compiled, &input_data);
-        }
 
         let mut cs: CircuitSynthesizer<Bls12_377> = Default::default();
         let output = buffer_if_err(
@@ -274,50 +273,12 @@ fn run_test(test: Test, handler: &Handler, err_buf: &BufferEmitter) -> Result<Va
             buffer_if_err(&err_buf, Err(err.to_string()))?;
         }
 
-<<<<<<< HEAD
         if let Some(last_circuit) = last_circuit.as_ref() {
             if last_circuit != &circuit {
                 eprintln!(
                     "{}\n{}",
                     serde_yaml::to_string(last_circuit).unwrap(),
                     serde_yaml::to_string(&circuit).unwrap()
-=======
-        let state = if let Some(input) = test.config.get("state_file") {
-            let mut input_file: PathBuf = test.path.parent().expect("no test parent dir").into();
-            input_file.push(input.as_str().expect("state_file was not a string"));
-            fs::read_to_string(&input_file).expect("failed to read test state file")
-        } else {
-            "".to_string()
-        };
-
-        let mut output_items = vec![];
-
-        let mut last_circuit = None;
-        let mut last_ir: Option<snarkvm_ir::Program> = None;
-        for input in inputs {
-            let parsed = parsed.clone();
-            let input_parsed =
-                leo_parser::parse_program_input(&input.1, "input", &state, "state").map_err(|x| x.to_string())?;
-            let compiled = parsed.compile_ir(&input_parsed).map_err(|x| x.to_string())?;
-            let input_data = parsed
-                .process_input(&input_parsed, &compiled.header)
-                .map_err(|x| x.to_string())?;
-            if std::env::var("EMIT_IR").unwrap_or_default().trim() == "1" {
-                emit_ir(&test, &compiled, &input_data);
-            }
-            let mut cs: CircuitSynthesizer<Bls12_377> = Default::default();
-            let mut evaluator =
-                snarkvm_eval::SetupEvaluator::<_, snarkvm_eval::edwards_bls12::EdwardsGroupType, _>::new(&mut cs);
-            let output = evaluator.evaluate(&compiled, &input_data).map_err(|e| e.to_string())?;
-
-            let registers: Vec<_> = compiled.header.register_inputs.iter().cloned().collect();
-            let output = Output::new(&registers[..], output, &Span::default()).map_err(|e| e.to_string())?;
-            let circuit: SummarizedCircuit = SerializedCircuit::from(cs).into();
-
-            if circuit.num_constraints == 0 {
-                return Err(
-                    "- Circuit has no constraints, use inputs and registers in program to produce them".to_string(),
->>>>>>> 19456b3a2 (push casting so far, lots of pain refactoring)
                 );
                 buffer_if_err::<()>(&err_buf, Err("- Circuit changed on different input files".to_string()))?;
             }
@@ -339,6 +300,7 @@ fn run_test(test: Test, handler: &Handler, err_buf: &BufferEmitter) -> Result<Va
         });
     }
 
+    let ir = hash_file("/tmp/output/test.leo.ir.json");
     let initial_ast = hash_file("/tmp/output/initial_ast.json");
     let imports_resolved_ast = hash_file("/tmp/output/imports_resolved_ast.json");
     let canonicalized_ast = hash_file("/tmp/output/canonicalization_ast.json");
@@ -350,13 +312,8 @@ fn run_test(test: Test, handler: &Handler, err_buf: &BufferEmitter) -> Result<Va
 
     let final_output = CompileOutput {
         circuit: last_circuit.unwrap(),
-        ir: last_ir
-            .unwrap()
-            .to_string()
-            .split('\n')
-            .map(|x| x.to_string())
-            .collect::<Vec<String>>(),
         output: output_items,
+        ir,
         initial_ast,
         imports_resolved_ast,
         canonicalized_ast,
@@ -376,29 +333,6 @@ impl Namespace for CompileNamespace {
 
         run_test(test, &handler, &err_buf).map_err(|()| err_buf.0.take().to_string())
     }
-}
-
-/// hacky way to emit IR for snarkVM tests
-fn emit_ir(test: &Test, compiled: &IR_Program, input_data: &InputData) {
-    let mut target_path = std::env::current_dir().unwrap().join("tests").join("ir");
-    target_path.push(
-        test.path
-            .iter()
-            .skip_while(|p| p.to_str().unwrap() != "..")
-            .collect::<PathBuf>()
-            .strip_prefix(Path::new("..").join("tests").join("compiler"))
-            .unwrap()
-            .to_path_buf(),
-    );
-    target_path.pop();
-    create_dir_all(&target_path).unwrap();
-    let writer = |extension, data: Vec<u8>| {
-        let mut f = File::create(target_path.join(format!("{}{}", test.name, extension))).unwrap();
-        f.write_all(&data).unwrap();
-    };
-    writer(".leo.ir", compiled.serialize().unwrap());
-    writer(".leo.ir.fmt", compiled.to_string().as_bytes().to_vec());
-    writer(".leo.ir.input", input_data.serialize().unwrap());
 }
 
 struct TestRunner;

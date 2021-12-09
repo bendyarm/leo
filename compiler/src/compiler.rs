@@ -246,16 +246,45 @@ impl<'a, 'b> Compiler<'a, 'b> {
     fn do_asg_passes(&mut self) -> Result<()> {
         assert!(self.asg.is_some());
 
+        let run_dotifier = |asg: leo_asg::Program<'a>, name: &str| -> Result<leo_asg::Program<'a>> {
+            let mut path = self.output_directory.clone();
+            path.push(format!("{:}.dot", name));
+            leo_asg_passes::Dotifier::do_pass((
+                asg,
+                &self.context,
+                &self.output_options.asg_exclude_edges,
+                &self.output_options.asg_exclude_labels,
+                name.to_string(),
+                path,
+            ))
+        };
+
+        if self.output_options.asg_initial {
+            self.asg = Some(run_dotifier(self.asg.take().unwrap(), "initial_asg")?);
+        }
+
         // Do constant folding.
         if self.options.constant_folding_enabled {
             let asg = self.asg.take().unwrap();
-            self.asg = Some(leo_asg_passes::ConstantFolding::do_pass(self.handler, asg)?);
+            self.asg = Some(leo_asg_passes::ConstantFolding::do_pass((
+                asg,
+                self.handler,
+                &self.context,
+            ))?);
+
+            if self.output_options.asg_constants_folded {
+                self.asg = Some(run_dotifier(self.asg.take().unwrap(), "constants_folded_asg")?)
+            }
         }
 
         // Do dead code elimination.
         if self.options.dead_code_elimination_enabled {
             let asg = self.asg.take().unwrap();
-            self.asg = Some(leo_asg_passes::DeadCodeElimination::do_pass(self.handler, asg)?);
+            self.asg = Some(leo_asg_passes::DeadCodeElimination::do_pass((self.handler, asg))?);
+
+            if self.output_options.asg_dead_code_eliminated {
+                self.asg = Some(run_dotifier(self.asg.take().unwrap(), "dead_code_eliminated_asg")?);
+            }
         }
 
         Ok(())
@@ -267,15 +296,7 @@ impl<'a, 'b> Compiler<'a, 'b> {
 
         program.enforce_program(input)?;
 
-        Ok(program.render(&self.options))
-    }
-
-    pub fn compile<F: PrimeField, G: GroupType<F>, CS: ConstraintSystem<F>>(
-        &self,
-        cs: CS,
-        input: &leo_ast::Input,
-    ) -> Result<CompilationData> {
-        let compiled = self.compile_ir(input)?;
+        let compiled = program.render(&self.options);
 
         if self.output_options.emit_ir {
             let writer = |extension: &str, data: Vec<u8>| {
@@ -291,12 +312,24 @@ impl<'a, 'b> Compiler<'a, 'b> {
             writer(".leo.ir", compiled.serialize().unwrap());
             writer(".leo.ir.fmt", compiled.to_string().as_bytes().to_vec());
             writer(
+                ".leo.ir.json",
+                serde_json::to_string(&compiled).unwrap().as_bytes().to_vec(),
+            );
+            writer(
                 ".leo.ir.input",
                 self.process_input(input, &compiled.header)?.serialize().unwrap(),
             );
         }
 
-        self.compile_inner::<F, G, CS>(cs, input, compiled)
+        Ok(compiled)
+    }
+
+    pub fn compile<F: PrimeField, G: GroupType<F>, CS: ConstraintSystem<F>>(
+        &self,
+        cs: CS,
+        input: &leo_ast::Input,
+    ) -> Result<CompilationData> {
+        self.compile_inner::<F, G, CS>(cs, input, self.compile_ir(input)?)
     }
 
     pub fn compile_inner<F: PrimeField, G: GroupType<F>, CS: ConstraintSystem<F>>(
