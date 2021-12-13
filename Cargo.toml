@@ -212,16 +212,16 @@ debug = true
 
 # Remove on pr from staging to master once snarkvm does a release.
 [patch.crates-io]
-snarkvm-algorithms = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-curves = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-dpc = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-eval = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-fields = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-gadgets = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-ir = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-parameters = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-r1cs = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
-snarkvm-utilities = { git = "https://github.com/AleoHQ/snarkVM", branch = "master" }
+snarkvm-algorithms = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-curves = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-dpc = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-eval = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-fields = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-gadgets = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-ir = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-parameters = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-r1cs = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
+snarkvm-utilities = { git = "https://github.com/AleoHQ/snarkVM", branch = "bug/fix-fields-limited-length" }
 
 # snarkvm-algorithms = { path = "D:\\Work\\leo_repos\\snarkVM\\algorithms" }
 # snarkvm-curves = { path = "D:\\Work\\leo_repos\\snarkVM\\curves" }

@@ -29,7 +29,12 @@ use snarkvm_ir::{Group, GroupCoordinate, Integer, Value};
 pub(crate) fn asg_group_coordinate_to_ir(coordinate: &leo_asg::GroupCoordinate) -> GroupCoordinate {
     match coordinate {
         leo_asg::GroupCoordinate::Number(parsed) => GroupCoordinate::Field(snarkvm_ir::Field {
-            values: parsed.magnitude().iter_u64_digits().collect(),
+            values: parsed
+                .magnitude()
+                .iter_u64_digits()
+                .map(|uint| uint.to_le_bytes())
+                .flatten()
+                .collect(),
             negate: parsed.sign() == Sign::Minus,
         }),
         leo_asg::GroupCoordinate::SignHigh => GroupCoordinate::SignHigh,
@@ -58,12 +63,22 @@ impl<'a> Program<'a> {
                 CharValue::NonScalar(x) => *x,
             }),
             ConstValue::Field(parsed) => Value::Field(snarkvm_ir::Field {
-                values: parsed.magnitude().iter_u64_digits().collect(),
+                values: parsed
+                    .magnitude()
+                    .iter_u64_digits()
+                    .map(|uint| uint.to_le_bytes())
+                    .flatten()
+                    .collect(),
                 negate: parsed.sign() == Sign::Minus,
             }),
             ConstValue::Group(value) => match value {
                 GroupValue::Single(parsed) => Value::Group(Group::Single(snarkvm_ir::Field {
-                    values: parsed.magnitude().iter_u64_digits().collect(),
+                    values: parsed
+                        .magnitude()
+                        .iter_u64_digits()
+                        .map(|uint| uint.to_le_bytes())
+                        .flatten()
+                        .collect(),
                     negate: parsed.sign() == Sign::Minus,
                 })),
                 GroupValue::Tuple(left, right) => Value::Group(Group::Tuple(

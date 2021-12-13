@@ -519,7 +519,12 @@ impl<'a, 'b> Compiler<'a, 'b> {
             (Type::Field, InputValue::Field(value)) => {
                 let parsed: BigInt = value.parse().map_err(|_| AsgError::invalid_int(value, span))?;
                 Value::Field(snarkvm_ir::Field {
-                    values: parsed.magnitude().iter_u64_digits().collect(),
+                    values: parsed
+                        .magnitude()
+                        .iter_u64_digits()
+                        .map(|uint| uint.to_le_bytes())
+                        .flatten()
+                        .collect(),
                     negate: parsed.sign() == Sign::Minus,
                 })
             }
@@ -531,7 +536,12 @@ impl<'a, 'b> Compiler<'a, 'b> {
                 let asg_group = GroupValue::try_from(group)?;
                 match asg_group {
                     GroupValue::Single(parsed) => Value::Group(Group::Single(snarkvm_ir::Field {
-                        values: parsed.magnitude().iter_u64_digits().collect(),
+                        values: parsed
+                            .magnitude()
+                            .iter_u64_digits()
+                            .map(|uint| uint.to_le_bytes())
+                            .flatten()
+                            .collect(),
                         negate: parsed.sign() == Sign::Minus,
                     })),
                     GroupValue::Tuple(left, right) => Value::Group(Group::Tuple(
