@@ -75,6 +75,8 @@ pub use node::*;
 
 use leo_errors::{AstError, Result};
 
+extern crate lazy_static;
+
 /// The abstract syntax tree (AST) for a Leo program.
 ///
 /// The [`Ast`] type represents a Leo program as a series of recursive data types.

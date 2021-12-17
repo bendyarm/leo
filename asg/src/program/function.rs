@@ -49,7 +49,7 @@ pub struct Function<'a> {
     pub scope: &'a Scope<'a>,
     pub qualifier: FunctionQualifier,
     pub annotations: IndexMap<String, Annotation>,
-    pub const_: bool,
+    pub const_: Cell<bool>,
 }
 
 impl<'a> fmt::Display for Function<'a> {
@@ -128,7 +128,7 @@ impl<'a> Function<'a> {
             annotations: value.annotations.clone(),
             body: Cell::new(None),
             circuit: Cell::new(None),
-            const_: value.const_,
+            const_: Cell::new(value.const_),
             name: RefCell::new(value.identifier.clone()),
             span: Some(value.span.clone()),
             scope: new_scope,
@@ -168,6 +168,7 @@ impl<'a> Function<'a> {
                 );
             }
         } else {
+            // TODO @gluax, change this check to check for external annotations only and only on the AST pre internal libs.
             let illegal_annotations = value
                 .annotations
                 .iter()
@@ -261,7 +262,7 @@ impl<'a> Into<leo_ast::Function> for &Function<'a> {
             identifier: self.name.borrow().clone(),
             annotations: self.annotations.clone(),
             output: Some((&output).into()),
-            const_: self.const_,
+            const_: self.const_.get(),
             input,
             block: body,
             core_mapping: self.core_mapping.clone(),

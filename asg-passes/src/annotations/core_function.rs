@@ -14,16 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
-#![doc = include_str!("../README.md")]
-pub mod annotations;
-pub use annotations::*;
+use leo_asg::{Annotation, Function};
 
-pub mod dotify;
-pub use dotify::*;
+use crate::AnnotationHandler;
 
-pub mod constant_folding;
-pub use constant_folding::*;
+pub(crate) struct CoreFunction {}
 
-pub mod dead_code_elimination;
+impl<'a> AnnotationHandler<'a> for CoreFunction {
+    type Input = (&'a Function<'a>, &'a Annotation);
+    type Output = ();
 
-pub use dead_code_elimination::*;
+    fn resolve((function, annotation): Self::Input) -> Self::Output {
+        function.core_mapping.replace(
+            annotation
+                .arguments
+                .get(0)
+                .or(Some(&function.name.borrow().name))
+                .map(|f| f.to_string()),
+        );
+    }
+}

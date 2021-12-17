@@ -263,6 +263,9 @@ impl<'a, 'b> Compiler<'a, 'b> {
             self.asg = Some(run_dotifier(self.asg.take().unwrap(), "initial_asg")?);
         }
 
+        let asg = self.asg.take().unwrap();
+        self.asg = Some(leo_asg_passes::AnnotationResolver::do_pass(asg)?);
+
         // Do constant folding.
         if self.options.constant_folding_enabled {
             let asg = self.asg.take().unwrap();

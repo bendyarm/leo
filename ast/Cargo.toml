@@ -41,6 +41,9 @@ features = [ "derive", "rc" ]
 version = "1.0"
 features = [ "preserve_order" ]
 
+[dependencies.lazy_static]
+version = "1.4.0"
+
 [dependencies.tendril]
 version = "0.4"
 

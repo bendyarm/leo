@@ -14,16 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with the Leo library. If not, see <https://www.gnu.org/licenses/>.
 
-#![doc = include_str!("../README.md")]
-pub mod annotations;
-pub use annotations::*;
+pub trait AnnotationHandler<'a> {
+    type Input;
+    type Output;
 
-pub mod dotify;
-pub use dotify::*;
-
-pub mod constant_folding;
-pub use constant_folding::*;
-
-pub mod dead_code_elimination;
-
-pub use dead_code_elimination::*;
+    fn resolve(input: Self::Input) -> Self::Output;
+}

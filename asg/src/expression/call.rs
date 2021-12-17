@@ -74,7 +74,7 @@ impl<'a> ExpressionNode<'a> for CallExpression<'a> {
     }
 
     fn is_consty(&self) -> bool {
-        self.function.get().const_
+        self.function.get().const_.get()
     }
 }
 
@@ -197,7 +197,12 @@ impl<'a> FromAst<'a, leo_ast::CallExpression> for CallExpression<'a> {
                 .into());
             }
         };
-        if scope.resolve_current_function().map(|f| f.const_).unwrap_or_default() && !function.const_ {
+        if scope
+            .resolve_current_function()
+            .map(|f| f.const_.get())
+            .unwrap_or_default()
+            && !function.const_.get()
+        {
             return Err(AsgError::calling_non_const_in_const_context(&value.span).into());
         }
         if let Some(expected) = expected_type {

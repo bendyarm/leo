@@ -131,8 +131,7 @@ fn resolve_file(handler: &Handler, file: &str) -> Result<Program> {
         .get(&file.to_string())
         .ok_or_else(|| ImportError::no_such_stdlib_file(file))?;
 
-    let mut ast = leo_parser::parse_ast(handler, file, resolved)?.into_repr();
-    ast.handle_internal_annotations();
+    let ast = leo_parser::parse_ast(handler, file, resolved)?.into_repr();
 
     Ok(ast)
 }

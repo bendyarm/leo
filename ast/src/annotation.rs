@@ -18,8 +18,15 @@ use crate::Identifier;
 use leo_errors::Span;
 
 use serde::{Deserialize, Serialize};
-use std::fmt;
+use std::{collections::HashSet, fmt};
 use tendril::StrTendril;
+
+use lazy_static::lazy_static;
+
+lazy_static! {
+    static ref EXTERNAL_ANNOTATIONS: HashSet<&'static str> = HashSet::from(["test"]);
+    static ref INTERNAL_ANNOTATIONS: HashSet<&'static str> = HashSet::from(["AlwaysConst", "CoreFunction"]);
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Annotation {
@@ -29,11 +36,17 @@ pub struct Annotation {
     pub arguments: Vec<StrTendril>,
 }
 
-const ALLOWED_ANNOTATIONS: &[&str] = &["test"];
-
 impl Annotation {
     pub fn is_valid_annotation(&self) -> bool {
-        ALLOWED_ANNOTATIONS.iter().any(|name| self.name.name.as_ref() == *name)
+        EXTERNAL_ANNOTATIONS.contains(self.name.name.as_ref()) || INTERNAL_ANNOTATIONS.contains(self.name.name.as_ref())
+    }
+
+    pub fn is_external_annotation(&self) -> bool {
+        EXTERNAL_ANNOTATIONS.contains(self.name.name.as_ref())
+    }
+
+    pub fn is_internal_annotation(&self) -> bool {
+        INTERNAL_ANNOTATIONS.contains(self.name.name.as_ref())
     }
 }
 
