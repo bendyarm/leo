@@ -29,6 +29,7 @@ use leo_errors::Result;
 // To resolve below issues should we consider moving annotation handling to AST pass level?
 // But we currently have only one annotation that does this, and its a temporary measure till we can do better approach.
 // Will we have other annotations that need to be done pre type-inference?
+// If we find a way to handle some of these before hand we need to add the checks for internal/external here.
 fn handle_annotations<'a>(function: &'a Function<'a>) {
     for (name, annotation) in function.annotations.iter() {
         match name.as_str() {
