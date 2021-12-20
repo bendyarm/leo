@@ -12,6 +12,8 @@ function main(y: bool) -> bool {
 }
 
 // use std import to test import order
+// TODO: Blake2s doesn't exist anymore, change this example when we have other stdlib circuits
+// As of now, this test has the same semantics and `core_package_invalid.leo`
 import std.unstable.blake2s.Blake2s;
 
 circuit Foo {}

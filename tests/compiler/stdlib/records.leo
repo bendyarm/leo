@@ -5,7 +5,6 @@ input_file:
     - inputs/dummy.in
 */
 
-import std.transaction_model.record.Record;
 
 
 function records_equal(rec1: Record, rec2: Record) -> bool {
