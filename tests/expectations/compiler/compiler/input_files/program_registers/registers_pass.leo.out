@@ -17,7 +17,7 @@ outputs:
               type: u8
               value: "101"
     initial_ast: fc4b4464ad526dc7561dd3c7ec77374089c7ea7714c854dfdfef8ef369613b9d
-    ir: 1ed077cf11715e55f63266c919a51bbaa25a71d7926396734f9cc52c8c82d9df
-    imports_resolved_ast: ff256a5286c550b36c9c105c42d0bd2c72e7417f0a0b2d06570feb940e0d890d
-    canonicalized_ast: ff256a5286c550b36c9c105c42d0bd2c72e7417f0a0b2d06570feb940e0d890d
-    type_inferenced_ast: cd9b6067940076797d2bd4a91320b4939f8f632fa85c8ae7eacf2c15e82c4313
+    ir: 62b881d12c6a6fa075cdc77d6deaf05c907bee1c14c4f6320cb18855a73ac9c2
+    imports_resolved_ast: c9748d8e965d7a82b1dafbbd92aa8c03eb0aeb6b41535dc3ba965c82f6363cda
+    canonicalized_ast: c9748d8e965d7a82b1dafbbd92aa8c03eb0aeb6b41535dc3ba965c82f6363cda
+    type_inferenced_ast: 8623cc40594f797bed1608eb34bc5e32c1cfd8c763f29cf25df738ce37e2cce2

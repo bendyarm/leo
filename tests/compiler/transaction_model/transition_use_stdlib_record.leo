@@ -4,7 +4,6 @@ expectation: Pass
 input_file: inputs/dummy.in
 */
 
-import std.transaction_model.record.Record;
 
 @transition
 function one(rec1: Record, rec2: Record) -> (Record, Record) {

@@ -13,8 +13,8 @@ outputs:
       - input_file: inputs/dummy.in
         output:
           registers: {}
-    initial_ast: 705016fac09c0f1c806ea44250b9a83b82396323885a2ccd2a47da3b436a6333
+    initial_ast: d9a9d09c12bf8191b30a041ad2bc9a5e133070ba6b731d6e9c98f15d79a6fd39
     ir: 2f04a065c3855073939152af4138478d1244af39b87b26270458ec4778c7c476
-    imports_resolved_ast: 595200cc57c497b14ee94f3695d4ae3bdd225fe8af944e895099e6026ed43c07
-    canonicalized_ast: e18cad34c4727a9fd43de808dc8852f38db2ed31e3a6941b5b15ce3730721ec3
-    type_inferenced_ast: d40765aa2d9b28fd7ee570de5feac1434c426ed4a635db0a4e78021a8ee978dc
+    imports_resolved_ast: 7d2f15fdfca4b0e9038fbcdf6fa7e9c50f7e3849c8d994f9211dfec94b1c15c1
+    canonicalized_ast: 53801f4c035c3e305ec4ee8ecd947f80e3dbdafa9423d055cdcfd13bcca1cfe1
+    type_inferenced_ast: 2de34b91447d3f3bbe8a149ed27c19524379d1251f3c370de1ac53f9f4a761ca

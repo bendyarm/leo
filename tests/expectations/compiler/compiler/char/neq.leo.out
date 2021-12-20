@@ -101,7 +101,7 @@ outputs:
               type: char
               value: a
     initial_ast: d833991c93e2a9a80a0833d94530ab6b90d36a2566f232f695a6d2aa7990a564
-    ir: c15b51425e85ae2f93ad4b99c874dacff2e3c48ec3aef81a4f93acd17c6a3465
-    imports_resolved_ast: a52607f60c1ab1910658b9696c0b6fe48f5e6a349df650c7eeacf6b3b6d1f24e
-    canonicalized_ast: a52607f60c1ab1910658b9696c0b6fe48f5e6a349df650c7eeacf6b3b6d1f24e
-    type_inferenced_ast: 5515fa89e46932add212d38a9adeaa822008951e89a378c0d64d321561684fa7
+    ir: 38117da7396daf94717bbcf878ff1afa68c7d9417df6a2e82d3282c2938754ab
+    imports_resolved_ast: 5857a027a16233baf8b2bee3cc0782883ba9b0fc6fd178c024eb8809147a9763
+    canonicalized_ast: 5857a027a16233baf8b2bee3cc0782883ba9b0fc6fd178c024eb8809147a9763
+    type_inferenced_ast: 35d0b4d80d49b301d7aa821cb4839f9e0d63e9b22d1dbe5d51b355e2e8f5e3c7

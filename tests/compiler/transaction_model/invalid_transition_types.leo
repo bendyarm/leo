@@ -4,7 +4,6 @@ expectation: Fail
 input_file: inputs/dummy.in
 */
 
-import std.transaction_model.record.Record;
 
 @transition
 function three_in_out(rec1: Record, rec2: Record, rec3: Record) -> (Record, Record, Record) {

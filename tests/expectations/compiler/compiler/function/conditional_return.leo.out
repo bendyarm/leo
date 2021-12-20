@@ -17,7 +17,7 @@ outputs:
               type: u32
               value: "4"
     initial_ast: acd6576a1619455e52d26b2aff74a1eb030c8c6bdbbaf1598bec7f73dfb15858
-    ir: 648b00c5c9a6aa834c16bb0b853e467a6eb91fea6a82345c6842515eba253238
-    imports_resolved_ast: 614fea503cfc485a8b4226714e27caf877b00fb7b521af7c7e45cd0a800860d0
-    canonicalized_ast: 614fea503cfc485a8b4226714e27caf877b00fb7b521af7c7e45cd0a800860d0
-    type_inferenced_ast: ec7cced5cb56b37ebaf9fe3096f3d1e21e774405cf7f2d9e68a1ece63032cb2e
+    ir: 1b643dfda49f709466af9561b442af5e5db0e5861b9c43d1928c52d177cc9e58
+    imports_resolved_ast: d92284eb7823c2150cc21ab4262c6d1771a0b0495aa856dee70fc7b9c6696e35
+    canonicalized_ast: d92284eb7823c2150cc21ab4262c6d1771a0b0495aa856dee70fc7b9c6696e35
+    type_inferenced_ast: 1426bc912a87abf1181ed58bac5e8ae79520df41a67180c5112d6b6794dbd9a2
