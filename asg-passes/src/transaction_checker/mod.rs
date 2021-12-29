@@ -62,7 +62,19 @@ impl<'a, 'b> StatementVisitor<'a> for TransactionChecker<'b> {}
 
 impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
     fn visit_function(&mut self, input: &'a Function<'a>) -> VisitResult {
+        // Temporary requirement restricting transactions to transitions
+        if input.annotations.keys().any(|k| k == &"transaction".to_string()) {
+            if !input.annotations.keys().any(|k| &"transition".to_string()) {
+                unimplemented!("Standalone transactions have not been implemented. Each @transaction must contain @transition.")
+            }
+        }
+
         if input.annotations.keys().any(|k| k == &"transition".to_string()) {
+            // Temporary requirement restricting transitions to transactions
+            if !input.annotations.keys().any(|k| k == &"transaction".to_string()) {
+                unimplemented!("Standalone transitions have not been implemented. Each @transition must contain @transaction.")
+            }
+
             let default = Span::default();
             let span = &input.span.as_ref().unwrap_or(&default);
 
