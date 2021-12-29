@@ -337,7 +337,7 @@ create_errors!(
         help: None,
     }
 
-    /// For when a transition function does not have at most two outputs of tupe `Record`.
+    /// For when a transition function does not have at most two outputs of type `Record`.
     @formatted
     output_is_at_most_n_records {
         args: (n: usize),
@@ -345,4 +345,11 @@ create_errors!(
         help: None,
     }
 
+    /// For when a `Record` is used in an array of unspecified size.
+    @formatted
+    record_type_in_unknown_size_array {
+        args: (),
+        msg: format!("`Record`s from the standard library cannot be used in an array of unspecified size."),
+        help: None,
+    }
 );

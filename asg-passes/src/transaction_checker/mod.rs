@@ -26,33 +26,31 @@ pub struct TransactionChecker<'b> {
 }
 
 impl<'a, 'b> TransactionChecker<'b> {
-    /// Checks that a given type is a `Circuit` and a `Record` from stdlib,
-    /// otherwise emit an error.
-    fn check_type_is_record(&self, typ: &Type<'a>, err: &dyn Fn() -> LeoError) {
-        match typ {
-            Type::Circuit(circ) => {
-                if circ.name.clone().into_inner().to_string() != "Record"
-                    || !circ.annotations.keys().any(|k| k == "CoreCircuit")
-                {
-                    self.handler.emit_err(err())
+    /// Recursively count the number of `Record` types in a `Type`.
+    fn count_record_types(&self, typ: &Type<'a>, err: &dyn Fn() -> LeoError) -> usize {
+            match typ {
+                Type::Circuit(circ) => {
+                    if circ.name.clone().into_inner().to_string() == "Record" && circ.annotations.keys().any(|k| k == "CoreCircuit") {
+                        1
+                    } else {
+                        0
+                    }
+                },
+                Type::Tuple(sub_typs) => {
+                    sub_typs.iter().fold(0usize, |n, typ| n + self.count_record_types(&typ, err))
                 }
-            }
-            _ => self.handler.emit_err(err()),
-        }
-    }
-
-    /// Checks that argument types are `Record`s and that there are an appropriate nubmer of them.
-    fn check_arg_types(&self, typ: &Type<'a>, max_records: usize, err: &dyn Fn() -> LeoError) {
-        match typ {
-            Type::Circuit(_) => self.check_type_is_record(typ, err),
-            Type::Tuple(sub_typs) => {
-                if sub_typs.len() > max_records {
-                    self.handler.emit_err(err());
+                Type::Array(typ, n) => {
+                    (*n as usize) * self.count_record_types(&typ, err)
                 }
-                sub_typs.iter().for_each(|typ| self.check_type_is_record(typ, err));
+                Type::ArrayWithoutSize(typ) => {
+                    // TODO: (@pranav) Can ArrayWithoutSize exist at this point?
+                    if self.count_record_types(typ.as_ref(), err) > 0 {
+                        self.handler.emit_err(err());
+                    }
+                    0
+                }
+                _ => 0,
             }
-            _ => self.handler.emit_err(err()),
-        }
     }
 }
 
@@ -64,7 +62,7 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
     fn visit_function(&mut self, input: &'a Function<'a>) -> VisitResult {
         // Temporary requirement restricting transactions to transitions
         if input.annotations.keys().any(|k| k == &"transaction".to_string()) {
-            if !input.annotations.keys().any(|k| &"transition".to_string()) {
+            if !input.annotations.keys().any(|k| k == &"transition".to_string()) {
                 unimplemented!("Standalone transactions have not been implemented. Each @transaction must contain @transition.")
             }
         }
@@ -85,25 +83,20 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
                 );
             }
 
-            // Check that function arguments have the appropriate types.
-            let err = || CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into();
-            let arg_types: Type<'a> = if input.arguments.len() == 1 {
-                let (_, val) = input.arguments.last().unwrap();
-                val.get().borrow().type_.clone()
-            } else {
-                Type::Tuple(
-                    input
-                        .arguments
-                        .values()
-                        .map(|v| v.get().borrow().type_.clone())
-                        .collect(),
-                )
-            };
-            self.check_arg_types(&arg_types, Testnet2::NUM_INPUT_RECORDS, &err);
+            // Check that function inputs do not exceed the maximum number of records.
+            let mut input_record_count = 0;
+            let err = || CompilerError::record_type_in_unknown_size_array(span).into();
+            for arg in input.arguments.values() {
+                input_record_count += self.count_record_types(&arg.get().borrow().type_, &err)
+            }
+            if input_record_count > Testnet2::NUM_INPUT_RECORDS {
+                self.handler.emit_err(CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into())
+            }
 
-            // Check that function outputs have the appropriate types.
-            let err = || CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into();
-            self.check_arg_types(&input.output, Testnet2::NUM_OUTPUT_RECORDS, &err);
+            // Check that function outputs do not exceed the maximum number of records.
+            if self.count_record_types(&input.output, &err) > Testnet2::NUM_OUTPUT_RECORDS {
+                self.handler.emit_err(CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into())
+            }
             self.count += 1;
         }
 
