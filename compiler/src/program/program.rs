@@ -20,7 +20,7 @@ use leo_asg::{
     AsgId, CircuitMember, ExpressionNode, Function, FunctionQualifier, InputCategory, IntegerType, Type as AsgType,
     Variable,
 };
-use snarkvm_ir::{Header, Instruction, MaskData, QueryData, RepeatData, SnarkVMVersion, Type, Value};
+use snarkvm_ir::{Header, Instruction, MaskData, QueryData, RepeatData, SnarkVMVersion, Type, Value, Annotation};
 
 use indexmap::IndexMap;
 
@@ -37,6 +37,8 @@ struct Input {
 pub(crate) struct IrFunction {
     argument_start_variable: u32,
     instructions: Vec<Instruction>,
+    annotations: Vec<Annotation>,
+
 }
 
 #[derive(Clone, Debug)]
@@ -144,6 +146,10 @@ impl<'a> Program<'a> {
         self.functions.push(IrFunction {
             instructions: vec![],
             argument_start_variable: self.next_register,
+            annotations: function.annotations.values().map(|anno| Annotation {
+                name: anno.name.to_string(),
+                arguments: anno.arguments.iter().map(|arg| arg.to_string()).collect(),
+            }).collect(),
         });
     }
 
@@ -153,6 +159,10 @@ impl<'a> Program<'a> {
         self.functions.push(IrFunction {
             instructions: vec![],
             argument_start_variable: self.next_register,
+            annotations: function.annotations.values().map(|anno| Annotation {
+                name: anno.name.to_string(),
+                arguments: anno.arguments.iter().map(|arg| arg.to_string()).collect(),
+            }).collect(),
         });
         match function.qualifier {
             FunctionQualifier::Static => (),
@@ -258,6 +268,7 @@ impl<'a> Program<'a> {
                 .map(|f| snarkvm_ir::Function {
                     argument_start_variable: f.argument_start_variable,
                     instructions: f.instructions,
+                    annotations: f.annotations,
                 })
                 .collect(),
             header: Header {
