@@ -94,7 +94,7 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b85aed1b7ca965b6613d14ab243c746316180401cbb9ba3b2cb22bff16fc08f"
 dependencies = [
- "proc-macro2 1.0.32",
+ "proc-macro2 1.0.34",
  "quote 1.0.10",
  "syn 1.0.82",
 ]
@@ -2702,7 +2702,7 @@ dependencies = [
  "derivative",
  "digest 0.9.0",
  "hex",
- "itertools 0.10.1",
+ "itertools 0.10.3",
  "lazy_static",
  "once_cell",
  "rand 0.8.4",
