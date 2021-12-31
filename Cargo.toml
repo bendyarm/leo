@@ -212,16 +212,28 @@ debug = true
 
 # Remove on pr from staging to master once snarkvm does a release.
 [patch.crates-io]
-snarkvm-algorithms = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-curves = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-dpc = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-eval = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-fields = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-gadgets = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-ir = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-parameters = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-r1cs = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
-snarkvm-utilities = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-algorithms = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-curves = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-dpc = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-eval = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-fields = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-gadgets = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-ir = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-parameters = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-r1cs = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+# snarkvm-utilities = { git = "https://github.com/AleoHQ/snarkVM", branch = "feature/staging-testnet2" }
+
+snarkvm-algorithms = { path = "/Users/pranav/work/Aleo/snarkVM/algorithms" }
+snarkvm-curves = { path = "/Users/pranav/work/Aleo/snarkVM/curves" }
+snarkvm-dpc = { path = "/Users/pranav/work/Aleo/snarkVM/dpc" }
+snarkvm-eval = { path = "/Users/pranav/work/Aleo/snarkVM/eval" }
+snarkvm-fields = { path = "/Users/pranav/work/Aleo/snarkVM/fields" }
+snarkvm-gadgets = { path = "/Users/pranav/work/Aleo/snarkVM/gadgets" }
+snarkvm-ir = { path = "/Users/pranav/work/Aleo/snarkVM/ir" }
+snarkvm-parameters = { path = "/Users/pranav/work/Aleo/snarkVM/parameters" }
+snarkvm-r1cs = { path = "/Users/pranav/work/Aleo/snarkVM/r1cs" }
+snarkvm-utilities = { path = "/Users/pranav/work/Aleo/snarkVM/utilities" }
+
 
 # snarkvm-algorithms = { path = "D:\\Work\\leo_repos\\snarkVM\\algorithms" }
 # snarkvm-curves = { path = "D:\\Work\\leo_repos\\snarkVM\\curves" }

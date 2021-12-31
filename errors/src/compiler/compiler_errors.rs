@@ -349,7 +349,7 @@ create_errors!(
     @formatted
     record_type_in_unknown_size_array {
         args: (),
-        msg: format!("`Record`s from the standard library cannot be used in an array of unspecified size."),
+        msg: "`Record`s from the standard library cannot be used in an array of unspecified size.",
         help: None,
     }
 );

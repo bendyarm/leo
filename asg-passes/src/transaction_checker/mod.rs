@@ -28,29 +28,29 @@ pub struct TransactionChecker<'b> {
 impl<'a, 'b> TransactionChecker<'b> {
     /// Recursively count the number of `Record` types in a `Type`.
     fn count_record_types(&self, typ: &Type<'a>, err: &dyn Fn() -> LeoError) -> usize {
-            match typ {
-                Type::Circuit(circ) => {
-                    if circ.name.clone().into_inner().to_string() == "Record" && circ.annotations.keys().any(|k| k == "CoreCircuit") {
-                        1
-                    } else {
-                        0
-                    }
-                },
-                Type::Tuple(sub_typs) => {
-                    sub_typs.iter().fold(0usize, |n, typ| n + self.count_record_types(&typ, err))
-                }
-                Type::Array(typ, n) => {
-                    (*n as usize) * self.count_record_types(&typ, err)
-                }
-                Type::ArrayWithoutSize(typ) => {
-                    // TODO: (@pranav) Can ArrayWithoutSize exist at this point?
-                    if self.count_record_types(typ.as_ref(), err) > 0 {
-                        self.handler.emit_err(err());
-                    }
+        match typ {
+            Type::Circuit(circ) => {
+                if circ.name.clone().into_inner().to_string() == "Record"
+                    && circ.annotations.keys().any(|k| k == "CoreCircuit")
+                {
+                    1
+                } else {
                     0
                 }
-                _ => 0,
             }
+            Type::Tuple(sub_typs) => sub_typs
+                .iter()
+                .fold(0usize, |n, typ| n + self.count_record_types(&typ, err)),
+            Type::Array(typ, n) => (*n as usize) * self.count_record_types(&typ, err),
+            Type::ArrayWithoutSize(typ) => {
+                // TODO: (@pranav) Can ArrayWithoutSize exist at this point?
+                if self.count_record_types(typ.as_ref(), err) > 0 {
+                    self.handler.emit_err(err());
+                }
+                0
+            }
+            _ => 0,
+        }
     }
 }
 
@@ -63,14 +63,18 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
         // Temporary requirement restricting transactions to transitions
         if input.annotations.keys().any(|k| k == &"transaction".to_string()) {
             if !input.annotations.keys().any(|k| k == &"transition".to_string()) {
-                unimplemented!("Standalone transactions have not been implemented. Each @transaction must contain @transition.")
+                unimplemented!(
+                    "Standalone transactions have not been implemented. Each @transaction must contain @transition."
+                )
             }
         }
 
         if input.annotations.keys().any(|k| k == &"transition".to_string()) {
             // Temporary requirement restricting transitions to transactions
             if !input.annotations.keys().any(|k| k == &"transaction".to_string()) {
-                unimplemented!("Standalone transitions have not been implemented. Each @transition must contain @transaction.")
+                unimplemented!(
+                    "Standalone transitions have not been implemented. Each @transition must contain @transaction."
+                )
             }
 
             let default = Span::default();
@@ -90,12 +94,14 @@ impl<'a, 'b> ProgramVisitor<'a> for TransactionChecker<'b> {
                 input_record_count += self.count_record_types(&arg.get().borrow().type_, &err)
             }
             if input_record_count > Testnet2::NUM_INPUT_RECORDS {
-                self.handler.emit_err(CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into())
+                self.handler
+                    .emit_err(CompilerError::input_is_at_most_n_records(Testnet2::NUM_INPUT_RECORDS, span).into())
             }
 
             // Check that function outputs do not exceed the maximum number of records.
             if self.count_record_types(&input.output, &err) > Testnet2::NUM_OUTPUT_RECORDS {
-                self.handler.emit_err(CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into())
+                self.handler
+                    .emit_err(CompilerError::output_is_at_most_n_records(Testnet2::NUM_OUTPUT_RECORDS, span).into())
             }
             self.count += 1;
         }
