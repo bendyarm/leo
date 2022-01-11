@@ -18,8 +18,8 @@ input_file:
  - inputs/unicode4.in
  - inputs/unicode5.in
 */
-function main(character: char) -> char {
+function main(character: char) -> (char, bool) {
     console.log("{}", character);
     
-    return character == 'z' ? 'x' : character;
+    return (character == 'z' ? 'x' : character, character == 'z');
 }

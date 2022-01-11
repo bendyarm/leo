@@ -2,4 +2,5 @@
 character: char = '\u{F}';
 
 [registers]
-r: char = 'a';
+r0: char = 'a';
+r1: bool = true;

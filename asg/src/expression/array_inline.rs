@@ -92,11 +92,9 @@ impl<'a> ExpressionNode<'a> for ArrayInlineExpression<'a> {
                     Some(ConstValue::Array(items)) => const_values.extend(items),
                     _ => return Ok(None),
                 }
-            } else {
-                if let Some(cv) = expr.get().const_value()? {
-                    const_values.push(cv);
-                }
-                return Ok(None);
+            } else if let Some(cv) = expr.get().const_value()? {
+                const_values.push(cv);
+                // return Ok(None);
             }
         }
         Ok(Some(ConstValue::Array(const_values)))

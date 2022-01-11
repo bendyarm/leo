@@ -67,12 +67,20 @@ impl<'a> ExpressionNode<'a> for BinaryExpression<'a> {
 
     fn const_value(&self) -> Result<Option<ConstValue>> {
         use BinaryOperation::*;
-        let left = self.left.get().const_value()?;
-        let right = self.right.get().const_value()?;
+        let left = if let Some(left) = self.left.get().const_value()? {
+            left
+        } else {
+            return Ok(None);
+        };
+        let right = if let Some(right) = self.right.get().const_value()? {
+            right
+        } else {
+            return Ok(None);
+        };
 
         let span = self.span.as_ref().cloned().unwrap_or_default();
         match (left, right) {
-            (Some(ConstValue::Int(left)), Some(ConstValue::Int(right))) => Ok(match self.operation {
+            (ConstValue::Int(left), ConstValue::Int(right)) => Ok(match self.operation {
                 Add => left.value_add(&right, &span)?.map(ConstValue::Int),
                 Sub => left.value_sub(&right, &span)?.map(ConstValue::Int),
                 Mul => left.value_mul(&right, &span)?.map(ConstValue::Int),
@@ -97,7 +105,7 @@ impl<'a> ExpressionNode<'a> for BinaryExpression<'a> {
             //         _ => return None,
             //     })
             // },
-            (Some(ConstValue::Boolean(left)), Some(ConstValue::Boolean(right))) => Ok(Some(match self.operation {
+            (ConstValue::Boolean(left), ConstValue::Boolean(right)) => Ok(Some(match self.operation {
                 Eq => ConstValue::Boolean(left == right),
                 Ne => ConstValue::Boolean(left != right),
                 And => ConstValue::Boolean(left && right),

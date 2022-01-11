@@ -2,4 +2,5 @@
 character: char = '\u{4e0}';
 
 [registers]
-r: char = 'a';
+r0: char = 'a';
+r1: bool = true;

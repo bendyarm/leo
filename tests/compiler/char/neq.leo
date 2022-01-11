@@ -19,6 +19,6 @@ input_file:
  - inputs/unicode5.in
 */
 
-function main(character: char) -> char {
-    return character != 'a' ? 'a' : 'Z';
+function main(character: char) -> (char, bool) {
+    return (character != 'a' ? 'a' : 'Z', character != 'a');
 }

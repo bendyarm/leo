@@ -2,4 +2,5 @@
 character: char = '\x7f';
 
 [registers]
-r: char = 'a';
+r0: char = 'a';
+r1: bool = true;

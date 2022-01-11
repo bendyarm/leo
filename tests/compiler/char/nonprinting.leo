@@ -75,5 +75,5 @@ function main(
         in33,
     ];
     console.log("{}", str);
-    return (str, in1 == '\x00');
+    return (str, str[0] == '\x00');
 }

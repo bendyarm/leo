@@ -2,4 +2,5 @@
 s1: [char; 13] = "Hello, World!";
 
 [registers]
-out: [char; 13] = "Hello, World!";
+out0: [char; 13] = "Hello, World!";
+out1: bool = false;

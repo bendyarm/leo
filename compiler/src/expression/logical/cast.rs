@@ -27,7 +27,7 @@ impl<'a> Program<'a> {
 
         let output = self.alloc();
 
-        let type_ = Value::Str(dbg!(cast.target_type.to_string()));
+        let type_ = Value::Str(cast.target_type.to_string());
 
         self.emit(Instruction::Cast(CastData {
             destination: output,
