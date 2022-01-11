@@ -94,7 +94,8 @@ impl<'a> ExpressionNode<'a> for ArrayInlineExpression<'a> {
                 }
             } else if let Some(cv) = expr.get().const_value()? {
                 const_values.push(cv);
-                // return Ok(None);
+            } else {
+                return Ok(None);
             }
         }
         Ok(Some(ConstValue::Array(const_values)))

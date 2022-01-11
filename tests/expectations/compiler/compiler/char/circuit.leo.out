@@ -4,104 +4,149 @@ expectation: Pass
 outputs:
   - circuit:
       num_public_variables: 0
-      num_private_variables: 7
-      num_constraints: 4
-      at: cf880423d9723b74dbe4aede8642e72120c22f9a4bad8abf3fc701b2cf2c4d4a
-      bt: e69d1def145004ca7fbc23f70bcd75e371ac49ed1b6e6737aad1fa8339906661
-      ct: 894d3aff0088eadc5783fc4664793f49c0a9a92a11faeab3c121e6f9f3db8ceb
+      num_private_variables: 11
+      num_constraints: 8
+      at: 1c4808bc458f7ed69858762c7e1dd7faa6b8d22619bf27e59638dfb101d19464
+      bt: 7f4135f1f061ddaa714dc6e6fbbdf014ca31ae730840b83b7bcf00e6236512a3
+      ct: 585421f12ba59fe6724ba4d13790cde727b52511972f2a41542a70a2d18c6547
     output:
       - input_file: inputs/ascii.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped_unicode1.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{f}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped_unicode2.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{e5}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped_unicode3.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{4e0}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped_unicode4.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{2764}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped_unicode5.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{1f622}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped_unicode6.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{10001f}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\'"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/hex1.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "*"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/hex2.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{7f}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/unicode1.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{e00f}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/unicode2.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{e5}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/unicode3.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{4e0}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/unicode4.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{2764}"
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/unicode5.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: "\\u{1f62d}"
-    initial_ast: 5613b610373382f54c2572a7d6266f342add819481e59c3c4cf469e32ba5e301
-    ir: 21058d1a95a24b33d085fd08b195bd78b267e5de7d787cf3d553e59b58c8e5f2
-    imports_resolved_ast: 42aa7dcc8f0da4f16bf546899e153f31295ffbe3492fcdaf392430b53b271543
-    canonicalized_ast: 42aa7dcc8f0da4f16bf546899e153f31295ffbe3492fcdaf392430b53b271543
-    type_inferenced_ast: a6ea2bbd1dea6dcec6e1ddf21748b5a3671a3711b04619bca1831363982df6cc
+            r1:
+              type: bool
+              value: "false"
+    initial_ast: f92fe05fd47a398244d26d2ff4d7fa2602a7c0938216aee917ed7df8ebab7f23
+    ir: 98221b970200137b26d1839edec498a08cc12afa364ad50b56f47e2974470e68
+    imports_resolved_ast: 250930d71bbc5efd4304ba7639a5b2afd4496d44871a0506a40e7b7e658f8dd5
+    canonicalized_ast: 250930d71bbc5efd4304ba7639a5b2afd4496d44871a0506a40e7b7e658f8dd5
+    type_inferenced_ast: d365f5cabde3dac84d3f0f32b655e61139707a87a263a9bcc8751ccacabac5ab

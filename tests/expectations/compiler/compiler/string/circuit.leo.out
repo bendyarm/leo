@@ -4,20 +4,23 @@ expectation: Pass
 outputs:
   - circuit:
       num_public_variables: 0
-      num_private_variables: 154
-      num_constraints: 115
-      at: c73182736b41504922ffbd5684468cdc3e5eac32e6f6e504077d46615504a444
-      bt: b91aeecc2605d68d469659981f84ffd9f4e89e60715cf5109f9e3dc7b4c30275
-      ct: 6d7a8caa60742927fd906c039c34fdb6d81855ecd060fa6c0643d7f8434f26b9
+      num_private_variables: 206
+      num_constraints: 167
+      at: 3593053f6cf457c05b1bc27a3aaab389d9fc01f415eca0d8fd80cf01620446d2
+      bt: 09d0476bbfda73f15009c66268f879b41f2e5dc8686c91a1901899404f2a1595
+      ct: 1c0339224fd0c4f877fff80b4c57470c6efaf0fc33650883ff801e1069384983
     output:
       - input_file: inputs/string_out.in
         output:
           registers:
-            out:
+            out0:
               type: "[char; 13]"
               value: "Hello, World!"
-    initial_ast: 041d491135929df77cab0ad3ceadaad8ca9566650423326ea4850cae5915f842
-    ir: 0c67820c0ce45bbd3e31a0de0b74bd04463b96c8571ac8214541082f98d8c3e7
-    imports_resolved_ast: f35940107a137733142b7587b2c648db935b2a46f7403d32fc54fd71a508456f
-    canonicalized_ast: 7b9c4b41e4f1553dd888a1d265d8b4550431110b0d65db0ff2ed64ee0c9772b6
-    type_inferenced_ast: 5f582b0b5d31848c2541ef98a7685b9cca0d1ff629a8754edd06bd9fb60e5b35
+            out1:
+              type: bool
+              value: "true"
+    initial_ast: 87173768ab50a848192cf549ad64eff6b7384218ae0ccb3889a33007f545f27c
+    ir: e8a28ba4cf7a1bd2a3ab4b8a4cc91bebb95b459b680a0f5564877c0dac2dea2b
+    imports_resolved_ast: e8aa41eb2e1201788894834db3ce7fbe9adc476d36868f30dc8cbb64d4c13795
+    canonicalized_ast: f70297bd994789afe29b5467cd5e3ccf0bea322fa7a79557c1264f6342caa731
+    type_inferenced_ast: 1697e9ae7d049385bc8b78738cfb68ef242413240010763c3602f0c3b05620a3

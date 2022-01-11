@@ -1,0 +1,5 @@
+---
+namespace: Compile
+expectation: Fail
+outputs:
+  - "Error [EASG0373030]: failed to parse int value '-1'\n    --> compiler-test:4:18\n     |\n   4 |     let x: u16 = -1u32 as u16;\n     |                  ^^^^^"

@@ -4,104 +4,149 @@ expectation: Pass
 outputs:
   - circuit:
       num_public_variables: 0
-      num_private_variables: 7
-      num_constraints: 3
-      at: 27e285016f0cd27ac4cde3e5c675f9e72ea5d8a753af7fc25707f7be20921c60
-      bt: f91b8601243dbd0d25e7df8f34ff304ca78a295fdfafbe0102ec6ce4fcb3c0f0
-      ct: fe68b86a12c0b8c1585a656d7c4b8c47fbe19677b5da7ce0aae1d80dffb2a2ca
+      num_private_variables: 11
+      num_constraints: 7
+      at: 1470ab0540ba75d4d513abce091a6ddfe847954e128f4a6fc358612859babd06
+      bt: 4ab7bf878b9118c171f69f1fd9ef6da26174ac380f4a6ae2d03bfb5a1201e4c3
+      ct: e8097781d020781687b8fffa1cae7fd05e8eb49194289b6e565ccd57f253eb78
     output:
       - input_file: inputs/ascii.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: Z
+            r1:
+              type: bool
+              value: "false"
       - input_file: inputs/escaped_unicode1.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped_unicode2.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped_unicode3.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped_unicode4.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped_unicode5.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped_unicode6.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/escaped.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/hex1.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/hex2.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/unicode1.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/unicode2.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/unicode3.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/unicode4.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
+            r1:
+              type: bool
+              value: "true"
       - input_file: inputs/unicode5.in
         output:
           registers:
-            r:
+            r0:
               type: char
               value: a
-    initial_ast: d833991c93e2a9a80a0833d94530ab6b90d36a2566f232f695a6d2aa7990a564
-    ir: c15b51425e85ae2f93ad4b99c874dacff2e3c48ec3aef81a4f93acd17c6a3465
-    imports_resolved_ast: ef91b89c2eb27ff34d9915cc75e7cf19370881989bc80c23cbaa57fce7810d04
-    canonicalized_ast: ef91b89c2eb27ff34d9915cc75e7cf19370881989bc80c23cbaa57fce7810d04
-    type_inferenced_ast: 38f4039f941d75fef3475f88cd2a26a89cc2187f5e9bb61457484ffd07774d7a
+            r1:
+              type: bool
+              value: "true"
+    initial_ast: e2b1c60b7318546600d04f0c0e0a5ac6040e85f2d2a4ebdc4bc8dc6a4f4001f3
+    ir: 6bc5a4b8f8d6d2dd6c6090a53ba99029fe3ca66d71672369649ec8a0ad171e2e
+    imports_resolved_ast: 16292fa7e263a9a335c9b103db78a1f62c9e19d38c20d6873e4c413118e1efc2
+    canonicalized_ast: 16292fa7e263a9a335c9b103db78a1f62c9e19d38c20d6873e4c413118e1efc2
+    type_inferenced_ast: df4c402795830ca62d2f3d797d680135b16837536204fe4c9a0cb60177c0d1f5

@@ -1,0 +1,5 @@
+---
+namespace: Compile
+expectation: Fail
+outputs:
+  - "Error [EASG0373027]: failed to resolve variable reference 'y'\n    --> compiler-test:6:12\n     |\n   6 |     return y;\n     |            ^"
