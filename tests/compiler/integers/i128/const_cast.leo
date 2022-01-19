@@ -10,7 +10,7 @@ inputs:
 */
 
 function main(y: bool) -> bool {
-    let x: i128 = 127203493u32 as i128;
+    let x: i128 = 4294967295u128 as i128;
 
     return y;
 }

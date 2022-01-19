@@ -63,7 +63,7 @@ fn run_with_args(opt: Opt) -> Result<(), Box<dyn Error>> {
 
     // Prepare directory for placing results.
     'main_loop: for (index, (path, text)) in tests.iter().enumerate() {
-        if let Some(config) = extract_test_config(text) {
+        if let Some(config) = extract_test_config(path, text) {
             // Skip namespaces that we don't need; also skip failure tests.
             if config.namespace != "Compile" || config.expectation == Expectation::Fail {
                 continue;

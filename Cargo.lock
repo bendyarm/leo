@@ -2631,7 +2631,7 @@ checksum = "1ecab6c735a6bb4139c0caafd0cc3635748bbb3acf4550e8138122099251f309"
 [[package]]
 name = "snarkvm-algorithms"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "anyhow",
  "bitvec",
@@ -2658,7 +2658,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-curves"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "derivative",
  "rand 0.8.4",
@@ -2673,7 +2673,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-derives"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "proc-macro-crate 0.1.5",
  "proc-macro-error",
@@ -2685,7 +2685,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-dpc"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "anyhow",
  "base58",
@@ -2716,7 +2716,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-eval"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "anyhow",
  "indexmap",
@@ -2734,7 +2734,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-fields"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "anyhow",
  "bincode",
@@ -2749,7 +2749,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-gadgets"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "derivative",
  "digest 0.9.0",
@@ -2768,7 +2768,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-ir"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "anyhow",
  "bech32",
@@ -2782,7 +2782,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-marlin"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "blake2",
  "derivative",
@@ -2805,7 +2805,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-parameters"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "curl",
  "hex",
@@ -2817,7 +2817,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-polycommit"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "derivative",
  "digest 0.9.0",
@@ -2835,12 +2835,12 @@ dependencies = [
 [[package]]
 name = "snarkvm-profiler"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 
 [[package]]
 name = "snarkvm-r1cs"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "cfg-if 1.0.0",
  "fxhash",
@@ -2854,7 +2854,7 @@ dependencies = [
 [[package]]
 name = "snarkvm-utilities"
 version = "0.7.9"
-source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#72af71ad9660b4b30054ee923b845f5e4918571c"
+source = "git+https://github.com/AleoHQ/snarkVM?branch=feature/casting#3c6741ec7489abd4f110946eb6bd748c7265447e"
 dependencies = [
  "anyhow",
  "bincode",

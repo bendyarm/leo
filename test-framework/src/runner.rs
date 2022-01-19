@@ -76,7 +76,7 @@ pub fn run_tests<T: Runner>(runner: &T, expectation_category: &str) {
         if !filter.is_empty() && !path.contains(filter) {
             continue;
         }
-        let config = extract_test_config(&content);
+        let config = extract_test_config(&path, &content);
         if config.is_none() {
             //panic!("missing configuration for {}", path);
             // fail_categories.push(TestFailure {

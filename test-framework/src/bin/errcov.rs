@@ -61,7 +61,7 @@ fn run_with_args(opt: Opt) -> Result<(), Box<dyn Error>> {
     let re = Regex::new(r"Error \[(?P<code>.*)\]:.*").unwrap();
 
     for (path, content) in tests.into_iter() {
-        if let Some(config) = extract_test_config(&content) {
+        if let Some(config) = extract_test_config(&path, &content) {
             // Skip passing tests.
             if config.expectation == Expectation::Pass {
                 continue;

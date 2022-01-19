@@ -2,4 +2,4 @@
 namespace: Compile
 expectation: Fail
 outputs:
-  - "Error [EASG0373030]: failed to parse int value '-18446744073709551616'\n    --> compiler-test:4:18\n     |\n   4 |     let x: i64 = -18446744073709551616u128 as i64;\n     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^"
+  - "Error [ECMP0376019]: number of input registers must be greater than or equal to output registers\n    --> :0:0\n     |\n     |"

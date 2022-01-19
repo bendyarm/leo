@@ -2,4 +2,4 @@
 namespace: Compile
 expectation: Fail
 outputs:
-  - "Error [EASG0373027]: failed to resolve variable reference 'y'\n    --> compiler-test:6:12\n     |\n   6 |     return y;\n     |            ^"
+  - "Error [EASG0373061]: Failed to cast value `4294967295` as target type `i8`.\n    --> compiler-test:4:17\n     |\n   4 |     let x: i8 = 4294967295u128 as i8;\n     |                 ^^^^^^^^^^^^^^^^^^^^"

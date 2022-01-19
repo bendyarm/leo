@@ -1,0 +1,5 @@
+---
+namespace: Compile
+expectation: Fail
+outputs:
+  - "f#0 i#1: Integer overflow\n\nCaused by:\n    Integer overflow"

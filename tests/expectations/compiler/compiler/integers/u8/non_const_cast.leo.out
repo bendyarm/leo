@@ -1,0 +1,23 @@
+---
+namespace: Compile
+expectation: Pass
+outputs:
+  - circuit:
+      num_public_variables: 0
+      num_private_variables: 144
+      num_constraints: 144
+      at: bb4161d22b24634b63bfc3cc50085cf4a9b67918bb521b79ace19022213d49c1
+      bt: f343e24fcf4e5fbe043d4f6a763e9b0d751262bd2d2e7abc15cbc0d2b6178581
+      ct: 4df2e8971218f6ea583561a3c237bc96c80dca83875691d95a6ebdcce6b5a89f
+    output:
+      - input_file: u8.in
+        output:
+          registers:
+            r0:
+              type: bool
+              value: "true"
+    initial_ast: 1d3a96eee674360f76282624f1bddacc89a5337b78d64eb8efbef2d33ad8e1cb
+    ir: 069b4a176c0895477d3f9b4c4020c5ae55541bfe63c0bdaab477a5b894492a13
+    imports_resolved_ast: 9e52b43c3a9737ce49630159ae8ada84b29925545dc23d9efa293f152d4b80bb
+    canonicalized_ast: 9e52b43c3a9737ce49630159ae8ada84b29925545dc23d9efa293f152d4b80bb
+    type_inferenced_ast: d5952919568a60398be7a04c2ab1df6b58ce0a94fe892d31f44e415756d9b7cc

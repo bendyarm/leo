@@ -4,7 +4,7 @@ expectation: Fail
 */
 
 function main() -> bool {
-    let x: u16 = -1u32 as u16;
+    let x: u16 = 4294967295u128 as u16;
 
-    return y;
+    return true;
 }
