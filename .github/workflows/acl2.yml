@@ -28,8 +28,8 @@ jobs:
       - name: Pull tgc executable
         run: |
           mkdir acl2 && cd acl2;
-          wget $( curl -s https://api.github.com/repos/AleoHQ/leo-acl2-bin/releases/latest \
-                  | jq -r '.assets[0].browser_download_url' )
+          wget $( curl -s https://api.github.com/repos/bendyarm/leo-acl2-bin/releases/latest \
+                  | jq -r '.assets[].browser_download_url|scan("^.*leo-acl2--v.*\\.tgz$")' )
 
           echo "Unpacking $(ls):"
           tar -xvzf $(ls)
