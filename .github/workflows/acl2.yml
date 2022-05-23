@@ -25,8 +25,10 @@ jobs:
           cd compiler/parser
           cargo -q install --path . --example parser
           cd ../../tests/compiler
+          find . -type f -exec grep -q 'expectation *: *Fail' {} \; -delete
           find . -name '*.leo' -exec parser {} \; > /dev/null
           # Show how many there are:
+          echo "Counts (.leo / .json):"
           find . -name '*.leo' -print | wc
           find . -name '*.json' -print | wc
 
@@ -45,11 +47,13 @@ jobs:
       # Run theorem generation and checking using the prepared ASTs and the pulled and unzipped leo-acl2 tarball.
       - name: Run tgc over ASTs
         run: |
-          parsing_errors=();
-          num_cases=0;
-          echo "Still in ${PWD}";
+          parsing_errors=()
+          num_cases=0
+          echo "Still in ${PWD}"
+          cd tests/compiler
           for tc in `find ${PWD} -name '*.leo' -print`;
           do
+            echo entering "${tc%/*}";
             cd "${tc%/*}";  # enter the directory
             leofile="${tc##*/};
             jsonfile="${leofile%.leo}.json";
