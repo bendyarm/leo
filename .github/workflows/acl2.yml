@@ -26,7 +26,7 @@ jobs:
           cargo -q install --path . --example parser
           cd ../../tests/compiler
           find . -type f -exec grep -q 'expectation *: *Fail' {} \; -delete
-          find . -name '*.leo' -exec parser {} \; > /dev/null
+          find . -name '*.leo' -execdir parser {} \; > /dev/null
           # Show how many there are:
           echo "Counts (.leo / .json):"
           find . -name '*.leo' -print | wc
