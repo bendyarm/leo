@@ -37,7 +37,6 @@ jobs:
       - name: Pull tgc executable
         run: |
           mkdir acl2 && cd acl2;
-          export ACL2DIR="${PWD}";
           wget $( curl -s https://api.github.com/repos/bendyarm/leo-acl2-bin/releases/latest \
                   | jq -r '.assets[].browser_download_url|scan("^.*leo-acl2--v.*\\.tgz$")' )
 
@@ -50,6 +49,7 @@ jobs:
           parsing_errors=();
           num_cases=0;
           echo "Still in ${PWD}";
+          acl2dir="${PWD}"/acl2
           cd tests/compiler;
           for tc in `find ${PWD} -name '*.leo' -print`;
           do
@@ -58,7 +58,7 @@ jobs:
             leofile="${tc##*/}";
             jsonfile="${leofile%.leo}.json";
             num_cases=$((num_cases + 1));
-            $ACL2DIR/tgc parsing "$leofile" "$jsonfile" parsing-theorem.lisp > parsing_result.out || parsing_errors+=("$tc");
+            "$acl2dir"/tgc parsing "$leofile" "$jsonfile" parsing-theorem.lisp > parsing_result.out || parsing_errors+=("$tc");
           done;
 
           echo "----------------"
