@@ -47,7 +47,7 @@ jobs:
         run: |
           parsing_errors=();
           num_cases=0;
-          echo "Still in ${PWD}"
+          echo "Still in ${PWD}";
           for tc in `find ${PWD} -name '*.leo' -print`;
           do
             cd "${tc%/*}";  # enter the directory
