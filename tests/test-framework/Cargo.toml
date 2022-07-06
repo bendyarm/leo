@@ -64,4 +64,4 @@ path = "../../leo/errors"
 version = "1.5.3"
 
 [dependencies.regex]
-version = "1.5"
+version = "1.6"
