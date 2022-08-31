@@ -80,7 +80,7 @@ features = ["serde"]
 version = "1.4.0"
 
 [dependencies.notify]
-version = "4.0.17"
+version = "5.0.0"
 
 [dependencies.rand]
 version = "0.8"
