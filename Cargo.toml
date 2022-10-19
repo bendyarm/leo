@@ -58,7 +58,7 @@ rev = "51633e2"
 version = "0.3.65"
 
 [dependencies.clap]
-version = "3.1"
+version = "4.0"
 
 [dependencies.color-backtrace]
 version = "0.5.1"
